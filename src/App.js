@@ -7,6 +7,7 @@ import Contact from "./pages.js/contact";
 import Login from "./pages.js/login";
 import Signup from "./pages.js/signup";
 import Dashboard from "./pages.js/dashboard";
+import Transaction from "./pages.js/transaction";
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
       <Route path="/signin" element={<Login/>}/>
       <Route path="/signup" element={<Signup/>}/>
       <Route path="/dashboard" element={<Dashboard/>}/>
+      <Route path="/transaction" element={<Transaction/>}/>
     </Routes>
     </>
   );
