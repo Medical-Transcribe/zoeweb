@@ -2,6 +2,7 @@ import Header from "../components/header";
 import bin from './assets/trash.svg';
 import plus from './assets/plus.svg';
 import crown from './assets/crown.svg';
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
 
@@ -22,8 +23,8 @@ const Dashboard = () => {
         <>
         <Header/>
         <div className=" w-full py-3 border-b border-[#EAEBF0] flex flex-row items-center justify-center">
-            <button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#0000004D]">Overview</button>
-            <button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#78C257] bg-[#E1F4D9]">Transactions</button>
+            <Link to='/dashboard'><button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#0000004D]">Overview</button></Link>
+            <Link to='/transaction'><button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#78C257] bg-[#E1F4D9]">Transactions</button></Link>
         </div>
 
         <div className=" w-full px-20 py-8 rounded-[20px]">

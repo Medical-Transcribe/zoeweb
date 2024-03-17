@@ -17,7 +17,7 @@ const Navbar = () => {
 
             <span className='flex flex-row items-center space-x-6'>
                 <Link to='/signin'><p className=' font-Afacad text-[#78C257] font-semibold text-base'>Login</p></Link>
-                <button className=' px-6 py-4 bg-[#78C257] rounded-[50px] font-Afacad text-center font-semibold text-base text-white'>Start for free</button>
+                <Link to='/signup'><button className=' px-6 py-4 bg-[#78C257] rounded-[50px] font-Afacad text-center font-semibold text-base text-white'>Start for free</button></Link>
             </span>
         </div>
         </>

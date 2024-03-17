@@ -20,13 +20,13 @@ const Offer = () => {
                     </div>
                     
                     <div className=" w-full py-8 border-y border-[#EAEBF0]">
-                        <p className=" font-Afacad font-semibold text-2xl">Effortless Efficiency</p>
-                        <p className=" font-Afacad text-base font-normal mt-2">Stop note-taking, focus on participation. Capture every word instantly, access searchable transcripts, and boost productivity.</p>
+                        <p className=" font-Afacad font-semibold text-2xl">Enhanced Accessibility and Understanding</p>
+                        <p className=" font-Afacad text-base font-normal mt-2">Break down communication barriers, enhance engagement, and foster inclusivity with real-time captions and accessible transcripts.</p>
                     </div>
 
                     <div className=" w-full pt-8">
-                        <p className=" font-Afacad font-semibold text-2xl">Effortless Efficiency</p>
-                        <p className=" font-Afacad text-base font-normal mt-2">Stop note-taking, focus on participation. Capture every word instantly, access searchable transcripts, and boost productivity.</p>
+                        <p className=" font-Afacad font-semibold text-2xl">Powerful Insights and Actionable Intelligence</p>
+                        <p className=" font-Afacad text-base font-normal mt-2">Turn spoken content into data, analyze meeting dynamics, and unlock key takeaways. Leverage transcripts for content creation, knowledge management, and learning retention.</p>
                     </div>
                 </div>
             </div>
