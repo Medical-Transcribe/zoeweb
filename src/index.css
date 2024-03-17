@@ -1,13 +1,80 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Afacad';
+  src: url('./fonts/Afacad-VariableFont_wght.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.9s ease;
+}
+.answ {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.9s ease;
+}
+@media (min-width: 769px) {
+  /* Apply max-height: 300px for screen sizes greater than 768px */
+  .answ {
+    max-height: 300px;
+  }
+}
+.faq.active .answer {
+  max-height: 300px;
+}
+.faq.active .answ {
+  max-height: 300px;
+}
+
+.faq.active img {
+  transform: rotate(180deg);
+}
+
+.round {
+  position: relative;
+}
+
+.round label {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 16px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 16px;
+}
+
+.round label:after {
+  border: 2px solid #fff;
+  border-top: none;
+  border-right: none;
+  content: "";
+  height: 5px;
+  left: 4px;
+  opacity: 0;
+  position: absolute;
+  top: 4px;
+  transform: rotate(-45deg);
+  width: 7px;
+}
+
+.round input[type="checkbox"] {
+  visibility: hidden;
+}
+
+.round input[type="checkbox"]:checked + label {
+  background-color: #78C257;
+  border-color: #78C257;
+}
+
+.round input[type="checkbox"]:checked + label:after {
+  opacity: 1;
 }
