@@ -27,13 +27,13 @@ const Transaction = () => {
             <Link to='/transaction'><button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#0000004D]">Transactions</button></Link>
         </div>
 
-        <div className="  w-full px-20 py-8">
+        <div className="  w-full px-4 md:px-20 py-8">
             <div className=" w-full p-6 bg-[#ECF6E7] rounded-[20px]">
                 <p className=" font-semibold text-[32px] font-Afacad">Transactions</p> 
                 <p className=" font-Afacad font-normal text-base text-[#000000B2]">Showing accurate data from the app</p>
 
-                <div className=" flex flex-row justify-between items- mt-6 w-full">
-                    <div className=" py-3 px-6 bg-[#fff] h-full rounded-[20px] w-[64%]">
+                <div className=" flex flex-col lg:flex-row justify-between items- space-y-6 lg:space-y-0 mt-6 w-full">
+                    <div className=" py-3 px-6 bg-[#fff] h-full rounded-[20px] w-full lg:w-[64%] overflow-auto">
                         <table className=" w-full">
                             <thead>
                             <tr className=" border-b">
@@ -56,7 +56,7 @@ const Transaction = () => {
                         </table>
                     </div>
 
-                    <div className=" py-3 px-6 bg-[#fff] rounded-[20px] w-[34%]">
+                    <div className=" py-3 px-6 bg-[#fff] rounded-[20px] w-full lg:w-[34%]">
                         <p className=" text-xl font-semibold font-Afacad">Card</p>
                         <div className=" w-full mt-[34px]">
                             {cards.map((item, index) => (

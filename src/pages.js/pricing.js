@@ -13,11 +13,11 @@ const Price = () => {
     return ( 
         <>
         <Navbar/>
-        <div className=" px-20 py-16 w-full bg-[#ECF6E7]">
-            <p className=" font-Afacad text-[64px] font-semibold text-center">Pricing</p>
-            <p className=" font-Afacad font-normal text-xl text-center mt-3 px-[8%]">Unleash endless possibilities and choose your perfect plan, with real-time AI transcription for flawless recording of calls, meetings, interviews, and more.</p>
+        <div className=" px-4 md:px-20 py-8 md:py-16 w-full bg-[#ECF6E7]">
+            <p className=" font-Afacad text-3xl md:text-[64px] font-semibold text-center">Pricing</p>
+            <p className=" font-Afacad font-normal text-xl text-center mt-3 md:px-[8%]">Unleash endless possibilities and choose your perfect plan, with real-time AI transcription for flawless recording of calls, meetings, interviews, and more.</p>
             
-            <div className=" mt-12 grid  grid-cols-3 gap-[32px]">
+            <div className=" mt-12 grid grid-cols-1 lg:grid-cols-3 gap-[32px]">
                 {plans.map((item, index) => (
                     <div key={index} className=" w-full bg-[#fff] p-8 rounded-[30px] border border-[#EAEBF0]">
                         <p className=' font-Afacad font-semibold text-4xl'>{ item.name }</p>
@@ -48,7 +48,7 @@ const Price = () => {
             </div>
         </div>
 
-        <div className=" px-20 py-16 w-full">
+        <div className=" px-4 md:px-20 py-8 md:py-16 w-full">
             <div class="overflow-x-auto">
                 <table class="table-auto min-w-full ">
                     <thead class="">

@@ -68,12 +68,12 @@ const Faqq = () => {
         <>
 
         <Navbar/>
-        <div className=" px-20 py-16 bg-[#ECF6E7]">
-            <p className=" font-Afacad text-[64px] font-semibold text-center">FAQ</p>
-            <p className=" font-Afacad font-normal text-xl text-center mt-3 px-[8%]">Curious About AI Transcription? Dive into Our Comprehensive FAQs and Become a Transcription Pro!</p>
+        <div className="px-4 md:px-20 py-8 md:py-16 bg-[#ECF6E7]">
+            <p className=" font-Afacad text-3xl md:text-[64px] font-semibold text-center">FAQ</p>
+            <p className=" font-Afacad font-normal text-xl text-center mt-3 md:px-[8%]">Curious About AI Transcription? Dive into Our Comprehensive FAQs and Become a Transcription Pro!</p>
         </div>
 
-        <div className=" px-20 py-16">
+        <div className=" px-4 md:px-20 py-8 md:py-16">
             {faqsData.map((faq, index) => (
                 <div
                 key={index}
