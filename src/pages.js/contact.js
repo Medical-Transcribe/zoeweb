@@ -6,29 +6,29 @@ const Contact = () => {
     return ( 
         <>
         <Navbar/>
-        <div className=" w-full bg-[#ECF6E7] py-16 px-20">
-            <p className=" font-Afacad text-[64px] font-semibold text-center">Contact Us</p>
-            <p className=" font-Afacad font-normal text-xl text-center mt-3 px-[8%]">Curious About AI Transcription? Dive into Our Comprehensive FAQs and Become a Transcription Pro!</p>
+        <div className=" w-full bg-[#ECF6E7] py-8 md:py-16 px-4 md:px-20">
+            <p className=" font-Afacad text-3xl md:text-[64px] font-semibold text-center">Contact Us</p>
+            <p className=" font-Afacad font-normal text-xl text-center mt-3 md:px-[8%]">Curious About AI Transcription? Dive into Our Comprehensive FAQs and Become a Transcription Pro!</p>
             <div className=" w-full bg-white rounded-[8px] mt-16 p-8">
-                <div className="flex flex-row justify-between items-center w-full">
-                    <label htmlFor="" className=" w-[48%] font-Afacad font-medium text-base">
+                <div className="flex flex-col md:flex-row justify-between items-center w-full">
+                    <label htmlFor="" className=" w-full md:w-[48%] font-Afacad font-medium text-base">
                         Full Name
                         <input type="text" className=" w-full h-[46px] font-Afacad mt-2 border border-[#DAE0E6] p-2.5 rounded-md" placeholder="John Doe" />
                     </label>
 
-                    <label htmlFor="" className=" w-[48%] font-Afacad font-medium text-base">
+                    <label htmlFor="" className=" w-full md:w-[48%] mt-6 md:mt-0 font-Afacad font-medium text-base">
                         Email Address
                         <input type="text" className=" w-full h-[46px] font-Afacad mt-2 border border-[#DAE0E6] p-2.5 rounded-md" placeholder="JohnDoe@mail.com" />
                     </label>
                 </div>
 
-                <div className="flex flex-row mt-6 justify-between items-center w-full">
-                    <label htmlFor="" className=" w-[48%] font-Afacad font-medium text-base">
+                <div className="flex flex-col md:flex-row mt-6 justify-between items-center w-full">
+                    <label htmlFor="" className=" w-full md:w-[48%] font-Afacad font-medium text-base">
                         Phone Number
                         <input type="text" className=" w-full h-[46px] font-Afacad mt-2 border border-[#DAE0E6] p-2.5 rounded-md" placeholder="+234" />
                     </label>
 
-                    <label htmlFor="" className=" w-[48%] font-Afacad font-medium text-base">
+                    <label htmlFor="" className=" w-full md:w-[48%] mt-6 md:mt-0 font-Afacad font-medium text-base">
                         Get In Touch With Us
                         <select className=" w-full h-[46px] font-Afacad mt-2 border border-[#DAE0E6] p-2.5 rounded-md" placeholder="JohnDoe@mail.com">
                             <option value="">Select...</option>

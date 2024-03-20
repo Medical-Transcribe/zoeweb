@@ -17,10 +17,10 @@ const Choose = () => {
     ]
     return ( 
         <>
-        <div className=" px-20 py-16 bg-[#192C10]">
+        <div className=" px-4 md:px-20 py-8 md:py-16 bg-[#192C10]">
             <p className=" font-Afacad text-xl font-normal text-center text-white">Why Choose us</p>
-            <p className=" font-Afacad font-semibold text-5xl text-center text-white leading-[62px] mt-3 px-[5%]">Transcribe any conversation, empower every voice, unlock endless possibilities.</p>
-            <div className=" mt-12 grid grid-cols-3 gap-[32px]">
+            <p className=" font-Afacad font-semibold text-3xl md:text-5xl text-center text-white md:leading-[62px] mt-3 md:px-[5%]">Transcribe any conversation, empower every voice, unlock endless possibilities.</p>
+            <div className=" mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[32px]">
                 {features.map((item, index) => (
                     <div key={index} className=' w-full bg-[#ECF6E7] border border-[#EAEBF0] shadow-sm px-8 py-6 rounded-[10px]'>
                         <span className=' bg-white w-12 h-12 rounded-[50%] flex items-center justify-center'>

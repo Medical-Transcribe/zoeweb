@@ -2,9 +2,17 @@ import Header from "../components/header";
 import bin from './assets/trash.svg';
 import plus from './assets/plus.svg';
 import crown from './assets/crown.svg';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext, useState, useEffect } from 'react';
+import { AuthContext } from '../contexts/contextprovider';
 
 const Dashboard = () => {
+
+    const Navigate = useNavigate();
+    const { fetchUserProfile, user, getCookie } = useContext(AuthContext);
+    const [name, setName] = useState('');
+    const accessToken = getCookie('accessToken');
+    // const [plan, setPlan] = useState('');
 
     const devices =[
         {device:"MacBook Pro"},
@@ -19,6 +27,27 @@ const Dashboard = () => {
         {name:'Enterprise', price:'Custom pricing'}
     ]
 
+
+    useEffect(() => {
+        const fetchData = async () => {
+            await fetchUserProfile();
+            setName(user.data.name); // Set the name after fetching user profile
+            // setPlan(user.data.plan); // You can set other data if needed
+        };
+
+        if (!accessToken) {
+            // Access token not found, redirect to login page
+            Navigate('/signin');
+        } else {
+            // Access token found, fetch user profile
+            fetchData();
+        }
+    }, [fetchUserProfile, accessToken]);
+
+
+   
+    
+
     return ( 
         <>
         <Header/>
@@ -27,20 +56,20 @@ const Dashboard = () => {
             <Link to='/transaction'><button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#78C257] bg-[#E1F4D9]">Transactions</button></Link>
         </div>
 
-        <div className=" w-full px-20 py-8 rounded-[20px]">
-            <div className=" w-full p-6 bg-[#ECF6E7] flex flex-row items-center rounded-[20px]">
-                <span className=" h-[98px] w-[98px] bg-[#70706b] rounded-[50px]"></span>
-                <p className=" ml-6 font-Afacad font-medium text-[40px]">Welcome Back, Veek</p>
+        <div className=" w-full px-4 md:px-20 py-8 rounded-[20px]">
+            <div className=" w-full p-6 bg-[#ECF6E7] flex flex-col lg:flex-row md:items-center rounded-[20px]">
+                {/* <span className=" hidden lg:block h-[50px] w-[50px] bg-[#70706b] rounded-[50%]"></span> */}
+                <p className=" text-left w-full lg:ml-6 font-Afacad font-medium text-3xl lg:text-[40px]">Welcome Back, { name }</p>
                
 
-                <div className=" flex space-x-12 ml-auto">
+                <div className=" flex w-full space-x-6 mt-6 md:mt-8 lg:mt-0 md:space-x-12 lg:ml-auto">
                     <span className="">
                         <p className=" text-[#0000004D] font-medium font-Afacad text-base">Numbers of Transcriptions</p>
-                        <p className=" font-Afacad font-medium text-5xl text-[#0000004D] mt-2">10</p>
+                        <p className=" font-Afacad font-medium text-2xl lg:text-5xl text-[#0000004D] mt-2">10</p>
                     </span>
                     <span className="">
                         <p className=" text-[#0000004D] font-medium font-Afacad text-base">Numbers of Devices</p>
-                        <p className=" font-Afacad font-medium text-5xl text-[#0000004D] mt-2">2</p>
+                        <p className=" font-Afacad font-medium text-2xl lg:text-5xl text-[#0000004D] mt-2">2</p>
                     </span>
                 </div>
                 
@@ -50,8 +79,8 @@ const Dashboard = () => {
                 <p className=" font-semibold text-[32px] font-Afacad">Analysis</p> 
                 <p className=" font-Afacad font-normal text-base text-[#000000B2]">Showing accurate data from the app</p>
 
-                <div className=" mt-6 flex flex-row justify-between w-full">
-                    <div className=" w-[32%] p-6 rounded-[20px] bg-white">
+                <div className=" mt-6 flex flex-col lg:flex-row justify-between w-full space-y-8 lg:space-y-0">
+                    <div className=" w-full lg:w-[32%] p-6 rounded-[20px] bg-white">
                         <p className=" font-Afacad text-xl mb-3 font-semibold">Authorized Devices</p> 
                         {devices.map((device, index) => (
                             <div key={index} className=" w-full h-[45px] rounded-[5px] border border-[#EAEBF080] mb-3 flex flex-row justify-between items-center p-[18px]">
@@ -65,7 +94,7 @@ const Dashboard = () => {
                             <p className=" font-Afacad font-medium text-lg text-white">Authorize New Device</p>
                         </button>
                     </div>
-                    <div className=" w-[32%] p-6 rounded-[20px] bg-white">
+                    <div className=" w-full lg:w-[32%] p-6 rounded-[20px] bg-white">
                         <div className=" flex flex-row items-center justify-between mb-6">
                             <p className=" font-Afacad text-xl mb-3 font-semibold">Subscription</p> 
                             <button className=' flex flex-row bg-[#78C257] px-3 h-[36px] space-x-2 rounded-[50px] items-center'>
@@ -92,7 +121,7 @@ const Dashboard = () => {
                         </button>
                     </div>
 
-                    <div className=" w-[32%] p-6 rounded-[20px] bg-white">
+                    <div className=" w-full lg:w-[32%] p-6 rounded-[20px] bg-white">
                         <p className=" font-Afacad text-xl mb-[34px] font-semibold">Authorized Devices</p> 
                         <label htmlFor="" className=" w-full font-Afacad font-medium text-sm text-[#272D37]">
                             Reason For Contact

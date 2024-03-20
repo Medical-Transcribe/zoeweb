@@ -9,11 +9,11 @@ const Pricing = () => {
     ]
     return ( 
         <>
-        <div className=" px-20 py-16 w-full">
-            <p className=" font-Afacad text-xl font-normal text-center">Our Pricing</p>
-            <p className=" font-Afacad font-semibold text-5xl text-center leading-[62px] mt-3 px-[5%]">Unlock endless possibilities, choose your perfect plan.</p>
+        <div className=" px-4 md:px-20 py-8 md:py-16 w-full">
+            <p className=" font-Afacad text-lg md:text-xl font-normal text-center">Our Pricing</p>
+            <p className=" font-Afacad font-semibold text-3xl md:text-5xl text-center md:leading-[62px] mt-3 md:px-[5%]">Unlock endless possibilities, choose your perfect plan.</p>
             
-            <div className=" mt-12 grid  grid-cols-3 gap-[32px]">
+            <div className=" mt-12 grid grid-cols-1 lg:grid-cols-3 gap-[32px]">
                 {plans.map((item, index) => (
                     <div key={index} className=" w-full bg-[#ECF6E7] p-8 rounded-[30px] border border-[#EAEBF0]">
                         <p className=' font-Afacad font-semibold text-4xl'>{ item.name }</p>
