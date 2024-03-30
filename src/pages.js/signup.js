@@ -140,7 +140,7 @@ const Signup = () => {
             <img src={ logo } alt="Zoe Medicals" />
             <p className=' font-Afacad text-[40px] mt-2 text-center font-medium text-[#78C257]'>Sign up</p>
             <p className=' mt-3 font-Afacad font-normal text-center text-2xl'>Get Started Now</p>
-            <div className=' w-full mt-6 flex items-center justify-center space-x-6'>
+            {/* <div className=' w-full mt-6 flex items-center justify-center space-x-6'>
                 <button className=' w-[48%] md:w-[282px] h-[50px] space-x-3 bg-[#ECF6E7] rounded-[10px] flex flex-row items-center justify-center'>
                     <img src={ google } alt="" />
                     <p className=' font-Afacad font-normal text-xl'>Google</p>
@@ -155,7 +155,7 @@ const Signup = () => {
                 <span className=' w-[25%] md:w-[230px] border-t-[0.5px] border-[#00000099]'></span>
                 <p className=' font-Afacad text-base font-normal'>Or Sign up with</p>
                 <span className=' w-[25%] md:w-[230px] border-t-[0.5px] border-[#00000099]'></span>
-            </div>
+            </div> */}
 
             <div className="flex flex-col justify-between items-center w-full md:w-[587px] mt-16">
                 <label htmlFor="" className="w-full font-Afacad font-medium text-xl">
