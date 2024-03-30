@@ -5,8 +5,7 @@ import crown from './assets/crown.svg';
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState, useEffect } from 'react';
 import {loadStripe} from '@stripe/stripe-js';
-import { Elements, PaymentElement } from "@stripe/react-stripe-js";
-import { CardElement } from "@stripe/react-stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 import { AuthContext } from '../contexts/contextprovider';
 import Payform from "../components/payform";
 import load from './assets/load.gif';
@@ -209,11 +208,13 @@ const Dashboard = () => {
 
     return ( 
         <>
+
+        {/* payment Element */}
+
         { payment && <div className=" fixed w-full h-[100vh] bg-[#00000071] z-[9999] flex justify-center items-center ">
             <div className="w-[450px] p-6 rounded-[15px] overflow-auto z-[9999] bg-[#fff] relative">
                 <img src={ close } onClick={()=>{setPayment(false)}} className=" absolute top-3 right-3" alt="" />
                 <Elements stripe={stripepromise} options={options} >
-                    {/* <CardElement /> */}
                     <Payform clientSecret={clientSecret}/>
                 </Elements>
             </div>

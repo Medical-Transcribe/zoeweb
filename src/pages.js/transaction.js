@@ -3,8 +3,16 @@ import { Link } from "react-router-dom";
 import visa from './assets/visa.svg';
 import bin from './assets/trash.svg';
 import plus from './assets/plus.svg';
+import close from './assets/close.svg';
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../contexts/contextprovider";
+import { Elements } from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+import CardForm from "../components/cardForm";
+
 
 const Transaction = () => {
+
 
     const data = [
         { time: '2024-02-21 12:39', type: 'Subscription', amount: '$5', status: 'Completed' },
@@ -17,10 +25,29 @@ const Transaction = () => {
     const cards = [
         {img:visa, digit:'**** **** **** 1234 5989', date:'04/24', tag:'Primary Card'},
         {img:visa, digit:'**** **** **** 1234 5989', date:'04/24', tag:'Secondary Card'},
-    ]
+    ];
+
+    const [collectCard, setCollectCard] = useState(false);
+    const [stripepromise, setStripePromise] = useState(null);
+
+    useEffect(()=> {
+        const stripe = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
+        setStripePromise(stripe);
+    }, [])
+
 
     return ( 
         <>
+        {/* stripe card element */}
+        { collectCard && <div className="fixed w-full h-[100vh] bg-[#00000071] z-[9999] flex justify-center items-center ">
+            <div className="w-[450px] py-3 p-6 rounded-[15px] overflow-auto z-[9999] bg-[#fff] relative">
+                <img src={ close } onClick={()=>{setCollectCard(false)}} className=" absolute top-3 right-3" alt="" />
+                <Elements stripe={stripepromise}>
+                    <CardForm/>
+                </Elements>
+            </div>
+        </div>}
+
         <Header/>
         <div className=" w-full py-3 border-b border-[#EAEBF0] flex flex-row items-center justify-center">
             <Link to='/dashboard'><button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#0000004D] ">Overview</button></Link>
@@ -77,7 +104,7 @@ const Transaction = () => {
                             ))}
                         </div>
 
-                        <button className=" mt-[12px] flex px-5 py-3 flex-row items-center justify-center space-x-3 bg-[#78C257] rounded-[50px]">
+                        <button onClick={()=>{setCollectCard(true)}} className=" mt-[12px] flex px-5 py-3 flex-row items-center justify-center space-x-3 bg-[#78C257] rounded-[50px]">
                             <img src={ plus } alt="" />
                             <p className=" font-Afacad font-medium text-lg text-white">Add New Card</p>
                         </button>
