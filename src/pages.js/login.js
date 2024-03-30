@@ -69,7 +69,7 @@ const Login = () => {
         if (isValid) {
             try {
                 await loginUser(formData); // Call the loginUser function from the AuthContext
-                console.log('Login successful!');
+                // console.log('Login successful!');
                 setLoading('NO');
                 Navigate('/dashboard');
             } catch (error) {
@@ -85,6 +85,9 @@ const Login = () => {
 
     // console.log(user);
 
+    
+
+
 
     return ( 
         <>
@@ -92,7 +95,7 @@ const Login = () => {
             <img src={ logo } alt="Zoe Medicals" />
             <p className=' font-Afacad text-[40px] mt-2 text-center font-medium text-[#78C257]'>Login</p>
             <p className=' mt-3 font-Afacad font-normal text-center text-2xl'>Elevate your communication</p>
-            <div className=' w-full mt-6 flex items-center justify-center space-x-6'>
+            {/* <div className=' w-full mt-6 flex items-center justify-center space-x-6'>
                 <button className=' w-[48%] md:w-[282px] h-[50px] space-x-3 bg-[#ECF6E7] rounded-[10px] flex flex-row items-center justify-center'>
                     <img src={ google } alt="" />
                     <p className=' font-Afacad font-normal text-xl'>Google</p>
@@ -107,7 +110,7 @@ const Login = () => {
                 <span className=' w-[25%] md:w-[230px] border-t-[0.5px] border-[#00000099]'></span>
                 <p className=' font-Afacad text-base font-normal'>Or log in with</p>
                 <span className=' w-[25%] md:w-[230px] border-t-[0.5px] border-[#00000099]'></span>
-            </div>
+            </div> */}
 
             <div className="flex flex-col justify-between items-center w-full md:w-[587px] md:-16">
                 <label htmlFor="" className="w-full font-Afacad font-medium text-xl">
@@ -121,8 +124,9 @@ const Login = () => {
                     {errors.password && <p className="text-red-500 font-Afacad font-normal text-sm">{errors.password}</p>}
                 </label>
 
-                {/* <div className=" w-full flex justify-between mt-3">
-                    <label className="flex items-center">
+                <div className=" w-full flex justify-between mt-3">
+                    <div></div>
+                    {/* <label className="flex items-center">
                         <input
                         type="checkbox"
                         className={`form-checkbox h-4 w-4 text-blue-600`}
@@ -130,9 +134,9 @@ const Login = () => {
                         <span className="ml-2 text-basee text-[#000] font-Afacad font-medium">
                         Remember me
                         </span>
-                    </label>
-                    <p className=" text-[#78C257] text-base font-medium font-Afacad">Forgot Password</p>
-                </div> */}
+                    </label> */}
+                    <Link to='/forgotPassword'><p className=" text-[#78C257] text-base font-medium font-Afacad">Forgot Password</p></Link>
+                </div>
 
                 {message && <p className="text-red-500 font-Afacad font-normal text-sm">{message}</p>}
 

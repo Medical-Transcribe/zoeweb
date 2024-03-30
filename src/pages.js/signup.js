@@ -11,22 +11,26 @@ import { AuthContext } from '../contexts/contextprovider';
 
 const Signup = () => {
 
-    const { registerUser, getCookie } = useContext(AuthContext);
+    const { registerUser, getCookie, message } = useContext(AuthContext);
 
     const Navigate = useNavigate();
     const [loading, setLoading] = useState('NO');
-    const [message, setMessage] = useState(null);
+    const [specialties, setSpecialties] = useState([]);
+    // const [message, setMessage] = useState(null);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
+        specialty_id: '',
         password: ''
     });
 
     const [errors, setErrors] = useState({
         name: '',
         email: '',
+        specialty_id: '',
         password: ''
     });
+    
 
     // Function to check if there's a valid access token in the cookie
     const checkAccessTokenInCookie = () => {
@@ -41,10 +45,36 @@ const Signup = () => {
         checkAccessTokenInCookie();
     }, []);
 
+    useEffect(() => {
+        const fetchSpecialties = async () => {
+            try {
+                const response = await fetch('https://dev-api.zoemed.ai/api/v1/specialties');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch specialties');
+                }
+                const data = await response.json();
+                setSpecialties(data.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchSpecialties();
+    }, []);
+
+    // const handleChange = (e) => {
+    //     setFormData({ ...formData, [e.target.name]: e.target.value });
+    //     setErrors({ ...errors, [e.target.name]: '' }); // Clearing errors when input changes
+    // };
+
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-        setErrors({ ...errors, [e.target.name]: '' }); // Clearing errors when input changes
+        const { name, value } = e.target;
+        // Parse specialty_id value to integer if it's not an empty string
+        const parsedValue = name === 'specialty_id' ? parseInt(value, 10) : value;
+        setFormData({ ...formData, [name]: parsedValue });
+        setErrors({ ...errors, [name]: '' }); // Clearing errors when input changes
     };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -59,6 +89,13 @@ const Signup = () => {
             isValid = false;
         } else {
             errorsCopy.name = ''; // Clear the error if name is not empty
+        }
+
+        if (formData.specialty_id === '') {
+            errorsCopy.specialty_id = 'Specialty is required';
+            isValid = false;
+        } else {
+            errorsCopy.specialty_id = ''; // Clear the error if name is not empty
         }
 
         if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
@@ -82,12 +119,12 @@ const Signup = () => {
             try {
             await registerUser(formData); // Call registerUser function from context
             // If registration is successful, navigate to the dashboard
-            Navigate('/dashboard');
+            // Navigate('/dashboard');
             console.log('Registration successful!');
             setLoading('NO');
             } catch (error) {
                 setLoading('NO');
-                setMessage('Registration error');
+                // setMessage(error.response.data.message || 'Registration error'); // Set the error message from the response, or use a generic message
             }
         }
         else{
@@ -95,7 +132,7 @@ const Signup = () => {
         }
     };
 
-    // console.log(message)
+    // console.log(formData)
 
     return ( 
         <>
@@ -103,7 +140,7 @@ const Signup = () => {
             <img src={ logo } alt="Zoe Medicals" />
             <p className=' font-Afacad text-[40px] mt-2 text-center font-medium text-[#78C257]'>Sign up</p>
             <p className=' mt-3 font-Afacad font-normal text-center text-2xl'>Get Started Now</p>
-            <div className=' w-full mt-6 flex items-center justify-center space-x-6'>
+            {/* <div className=' w-full mt-6 flex items-center justify-center space-x-6'>
                 <button className=' w-[48%] md:w-[282px] h-[50px] space-x-3 bg-[#ECF6E7] rounded-[10px] flex flex-row items-center justify-center'>
                     <img src={ google } alt="" />
                     <p className=' font-Afacad font-normal text-xl'>Google</p>
@@ -118,7 +155,7 @@ const Signup = () => {
                 <span className=' w-[25%] md:w-[230px] border-t-[0.5px] border-[#00000099]'></span>
                 <p className=' font-Afacad text-base font-normal'>Or Sign up with</p>
                 <span className=' w-[25%] md:w-[230px] border-t-[0.5px] border-[#00000099]'></span>
-            </div>
+            </div> */}
 
             <div className="flex flex-col justify-between items-center w-full md:w-[587px] mt-16">
                 <label htmlFor="" className="w-full font-Afacad font-medium text-xl">
@@ -126,11 +163,24 @@ const Signup = () => {
                     <input type="text" name="name" value={formData.name} onChange={handleChange} className=" w-full h-[46px] font-Afacad mt-2 border border-[#DAE0E6] p-2.5 rounded-[15px]" placeholder="" />
                     {errors.name && <p className="text-red-500 font-Afacad font-normal text-sm">{errors.name}</p>}
                 </label>
+
                 <label htmlFor="" className="w-full mt-6 font-Afacad font-medium text-xl">
-                    Email Address
+                    Email
                     <input type="email" name="email" value={formData.email} onChange={handleChange} className=" w-full h-[46px] font-Afacad mt-2 border border-[#DAE0E6] p-2.5 rounded-[15px]" placeholder="" />
                     {errors.email && <p className="text-red-500 font-Afacad font-normal text-sm">{errors.email}</p>}
                 </label>
+
+                <label htmlFor="" className="w-full mt-6 font-Afacad font-medium text-xl">
+                    Specialty
+                    <select name="specialty_id" value={formData.specialty_id} onChange={handleChange} className=" w-full h-[46px] font-Afacad mt-2 border border-[#DAE0E6] p-2.5 rounded-[15px]" placeholder="">
+                        <option value="">Select Specialty</option>
+                        {specialties.map(specialty => (
+                            <option key={specialty.id} value={specialty.id}>{specialty.name}</option>
+                        ))}
+                    </select>
+                    {errors.specialty_id && <p className="text-red-500 font-Afacad font-normal text-sm">{errors.specialty_id}</p>}
+                </label>
+
                 <label htmlFor="" className="w-full mt-6 font-Afacad font-medium text-xl">
                     Password
                     <input type="password" name="password" value={formData.password} onChange={handleChange} className=" w-full h-[46px] font-Afacad mt-2 border border-[#DAE0E6] p-2.5 rounded-[15px]" placeholder="" />

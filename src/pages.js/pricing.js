@@ -1,6 +1,7 @@
 import Footer from "../components/footer";
 import Navbar from "../components/navbar";
 import check from './assets/check.svg';
+import { useState, useEffect } from "react";
 
 const Price = () => {
 
@@ -10,6 +11,32 @@ const Price = () => {
         {name:'Enterprise', price:'', duration:'Custom pricing', detail:'Explore the product with full functionality, onboarding and support.', ideal:'Ideal for Large organizations and high-volume users', feat:'10 Transcriptions per month'},
     ]
 
+    const [plan, setPlan] = useState([]);
+  
+  
+    useEffect(() => {
+      const fetchFAQs = async () => {
+          try {
+            const response = await fetch('https://dev-api.zoemed.ai/api/v1/plans');
+              if (!response.ok) {
+                  throw new Error('Failed to fetch FAQs');
+              }
+              const data = await response.json();
+              setPlan(data.data); // Extract only the 'data' array from the response
+              // setLoading(false);
+            } catch (error) {
+                console.error('Error fetching PLANS:', error);
+                // setLoading(false);
+            }
+        };
+  
+        fetchFAQs();
+        // Cleanup function if needed
+        return () => {
+            // Perform any cleanup, if necessary
+        };
+    }, []); // Empty dependency array to ensure the effect runs only once
+
     return ( 
         <>
         <Navbar/>
@@ -18,28 +45,28 @@ const Price = () => {
             <p className=" font-Afacad font-normal text-xl text-center mt-3 md:px-[8%]">Unleash endless possibilities and choose your perfect plan, with real-time AI transcription for flawless recording of calls, meetings, interviews, and more.</p>
             
             <div className=" mt-12 grid grid-cols-1 lg:grid-cols-3 gap-[32px]">
-                {plans.map((item, index) => (
-                    <div key={index} className=" w-full bg-[#fff] p-8 rounded-[30px] border border-[#EAEBF0]">
+                {plan.map((item, index) => (
+                    <div key={item.id} className=" w-full bg-[#fff] p-8 rounded-[30px] border border-[#EAEBF0]">
                         <p className=' font-Afacad font-semibold text-4xl'>{ item.name }</p>
                         <span className=' flex flex-row items-end h-[2em] mt-3 space-x-1'>
-                            <p className=' font-Afacad font-semibold text-4xl'>{ item.price }</p>
-                            <p className=' font-normal text-2xl font-Afacad'>{ item.duration }</p>
+                            <p className=' font-Afacad font-semibold text-4xl'>${ item.price }</p>
+                            <p className=' font-normal text-2xl font-Afacad'>Per Month</p>
                         </span>
-                        <p className=' mt-6 font-Afacad font-normal h-[4em] text-xl'>{ item.detail }</p>
+                        <p className=' mt-6 font-Afacad font-normal h-[4em] text-xl'>{ item.description }</p>
 
-                        <p className=' mt-6 font-Afacad font-semibold text-xl'>{ item.ideal }</p>
+                        <p className=' mt-6 font-Afacad font-semibold text-xl'>{ item.excerpt }</p>
 
                         <span className=' py-3 border-y border-[#78C2574D] flex flex-row items-center mt-3 space-x-3'>
                             <img src={ check } alt="" />
-                            <p className=' font-Afacad font-normal text-base'>{item.feat }</p>
+                            <p className=' font-Afacad font-normal text-base'>{item.benefits[0] }</p>
                         </span>
                         <span className=' py-3 flex flex-row items-center space-x-3'>
                             <img src={ check } alt="" />
-                            <p className=' font-Afacad font-normal text-base'>{item.feat }</p>
+                            <p className=' font-Afacad font-normal text-base'>{item.benefits[1] }</p>
                         </span>
                         <span className=' py-3 border-y border-[#78C2574D] flex flex-row items-center space-x-3'>
                             <img src={ check } alt="" />
-                            <p className=' font-Afacad font-normal text-base'>{item.feat }</p>
+                            <p className=' font-Afacad font-normal text-base'>{item.benefits[2] }</p>
                         </span>
 
                         <button className=' mt-10 px-6 py-4 bg-[#78C257] text-white text-center font-Afacad font-semibold text-base rounded-[50px]'>Get Started</button>
