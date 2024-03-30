@@ -11,6 +11,8 @@ import Transaction from "./pages.js/transaction";
 import Settings from "./pages.js/settings";
 import UpdatePassword from "./pages.js/updatePassword";
 import FgPass from "./pages.js/fgpass";
+import EnterCode from "./pages.js/entercode";
+import Newpass from "./pages.js/newpass";
 
 function App() {
 
@@ -34,6 +36,8 @@ function App() {
       <Route path="/transaction" element={<Transaction/>}/>
       <Route path="/settings" element={<Settings/>}/>
       <Route path="/updatePass" element={<UpdatePassword/>}/>
+      <Route path="/enterpasscode" element={<EnterCode/>}/>
+      <Route path="/createnewpassword" element={<Newpass/>}/>
     </Routes>
     </>
   );
