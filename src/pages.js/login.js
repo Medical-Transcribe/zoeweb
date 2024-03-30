@@ -69,7 +69,7 @@ const Login = () => {
         if (isValid) {
             try {
                 await loginUser(formData); // Call the loginUser function from the AuthContext
-                console.log('Login successful!');
+                // console.log('Login successful!');
                 setLoading('NO');
                 Navigate('/dashboard');
             } catch (error) {
@@ -84,6 +84,9 @@ const Login = () => {
     };
 
     // console.log(user);
+
+    
+
 
 
     return ( 
@@ -121,8 +124,9 @@ const Login = () => {
                     {errors.password && <p className="text-red-500 font-Afacad font-normal text-sm">{errors.password}</p>}
                 </label>
 
-                {/* <div className=" w-full flex justify-between mt-3">
-                    <label className="flex items-center">
+                <div className=" w-full flex justify-between mt-3">
+                    <div></div>
+                    {/* <label className="flex items-center">
                         <input
                         type="checkbox"
                         className={`form-checkbox h-4 w-4 text-blue-600`}
@@ -130,9 +134,9 @@ const Login = () => {
                         <span className="ml-2 text-basee text-[#000] font-Afacad font-medium">
                         Remember me
                         </span>
-                    </label>
-                    <p className=" text-[#78C257] text-base font-medium font-Afacad">Forgot Password</p>
-                </div> */}
+                    </label> */}
+                    <Link to='/forgotPassword'><p className=" text-[#78C257] text-base font-medium font-Afacad">Forgot Password</p></Link>
+                </div>
 
                 {message && <p className="text-red-500 font-Afacad font-normal text-sm">{message}</p>}
 
