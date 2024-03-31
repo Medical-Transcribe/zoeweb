@@ -20,21 +20,27 @@ const Settings = () => {
     // console.log(accessToken)
 
     useEffect(() => {
-        const fetchData = async () => {
-            await fetchUserProfile();
-            // Initialize formData after fetching user profile
-            setName(user.data.name);
-            setEmail(user.data.email);
-        };
-
+        const accessToken = getCookie('accessToken');
         if (!accessToken) {
-            // Access token not found, redirect to login page
-            Navigate('/signin');
+            Navigate('/signin'); // Access token not found, redirect to login page
         } else {
-            // Access token found, fetch user profile
-            fetchData();
+            // Fetch user profile data if access token is available
+            const fetchData = async () => {
+                try {
+                    const userData = await fetchUserProfile(accessToken);
+                    setName(userData.data.name); // Set user profile data in state
+                    setEmail(userData.data.email);
+                    console.log(userData.data)
+                } catch (error) {
+                    // Handle error
+                    console.error('Error fetching user profile:', error);
+                }
+            };
+
+            fetchData(); // Fetch user profile data
         }
-    }, [fetchUserProfile, accessToken]);
+    }, [Navigate]);
+
 
     const [formData, setFormData] = useState({
         newName: name,
@@ -131,10 +137,9 @@ const Settings = () => {
         { verifyEmail && <div className=' w-full h-[100vh] bg-[#00000046] fixed z-[9999] top-0 left-0 flex justify-center items-center'>
             <div className=' bg-white p-6 flex flex-col w-[400px] items-center justify-center rounded-[20px] relative'>
                 <img src={ close } onClick={()=>{setVerifyEmail(false)}} className=" absolute top-3 right-3" alt="" />
-                <p className=' text-center font-Afacad text-2xl font-semibold mt-1'>Enter Code</p>
-                <p className=" font-Afacad text-base text-[#00000099] font-normal mt-2 text-center">Enter code sent to your email address</p>
-                <input type="text" className=" mt-8 bg-[#F1F1F1] h-[45px] w-full rounded-[30px] font-Afacad p-2.5 text-sm font-normal" placeholder="Enter Code" name="" id="" />
-                <button className=' w-full bg-[#78C257] rounded-[30px] text-center font-Afacad text-base font-medium h-[45px] mt-6 text-white'>Confirm</button>
+                <p className=' text-center font-Afacad text-2xl font-semibold mt-1'>Email Sent</p>
+                <p className=" font-Afacad text-base text-[#00000099] font-normal mt-2 text-center">Please check your mail for a verification mail</p>
+                <button onClick={()=>{setVerifyEmail(false)}} className=' w-full bg-[#78C257] rounded-[30px] text-center font-Afacad text-base font-medium h-[45px] mt-6 text-white'>Close</button>
             </div>
         </div>}
         </>

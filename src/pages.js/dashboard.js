@@ -16,7 +16,7 @@ const Dashboard = () => {
 
     
     const Navigate = useNavigate();
-    const { fetchUserProfile, user, getCookie, getUserDevices } = useContext(AuthContext);
+    const { fetchUserProfile, getCookie, getUserDevices } = useContext(AuthContext);
     const [name, setName] = useState('');
     const [stripepromise, setStripePromise] = useState(null);
     const [clientSecret, setClientSecret] = useState("");
@@ -26,7 +26,11 @@ const Dashboard = () => {
     const [plan, setPlan] = useState('');
     const [selectedPlan, setSelectedPlan] = useState(null);
     const [loading, setLoading] = useState('NO');
-    const [payment, setPayment] = useState(false)
+    const [payment, setPayment] = useState(false);
+    const[ deviceCount, setDeviceCount] =useState('');
+    const[ transactionCount, setTransactionCount] =useState('');
+    const[ transcriptLeft, setTranscriptLeft] =useState(null);
+    // const [user, setUser] = useState(null);
 
 
     // const plans = [
@@ -36,21 +40,47 @@ const Dashboard = () => {
     // ]
 
 
-    useEffect(() => {
-        const fetchData = async () => {
-            await fetchUserProfile();
-            setName(user.data.name); // Set the name after fetching user profile
-            setPlan(user.data.plan); // You can set other data if needed
-        };
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         await fetchUserProfile();
+    //         setName(user.data.name); // Set the name after fetching user profile
+    //         setPlan(user.data.plan); // You can set other data if needed
+    //     };
 
+    //     if (!accessToken) {
+    //         // Access token not found, redirect to login page
+    //         Navigate('/signin');
+    //     } else {
+    //         // Access token found, fetch user profile
+    //         fetchData();
+    //     }
+    // }, []);
+
+
+    useEffect(() => {
+        const accessToken = getCookie('accessToken');
         if (!accessToken) {
-            // Access token not found, redirect to login page
-            Navigate('/signin');
+            Navigate('/signin'); // Access token not found, redirect to login page
         } else {
-            // Access token found, fetch user profile
-            fetchData();
+            // Fetch user profile data if access token is available
+            const fetchData = async () => {
+                try {
+                    const userData = await fetchUserProfile(accessToken);
+                    setName(userData.data.name); // Set user profile data in state
+                    setPlan(userData.data.plan);
+                    setDeviceCount(userData.statistics.devices_count);
+                    setTransactionCount(userData.statistics.transactions_count);
+                    setTranscriptLeft(userData.statistics.transcription_remaining);
+                    // console.log(userData)
+                } catch (error) {
+                    // Handle error
+                    console.error('Error fetching user profile:', error);
+                }
+            };
+
+            fetchData(); // Fetch user profile data
         }
-    }, [fetchUserProfile, accessToken]);
+    }, [Navigate]);
   
 
 
@@ -127,38 +157,46 @@ const Dashboard = () => {
             setDevices(null); // Reset devices state to null to show loading indicator
             fetchData();
         }
-    }, [accessToken]);
+    }, []);
     
 
     // console.log(plans)
     // console.log(accessToken)
 
 
-    const handlePlanSelection = (event, plan) => {
-        if (event.target.checked) {
-            setSelectedPlan(plan);
+    
+    const handlePlanSelection = (event, selectedPlanName) => {
+        const selected = event.target.checked;
+        setPlan(selected ? selectedPlanName : ''); // Update the selected plan
+        if (selected) {
+            const selectedPlan = plans.find(plan => plan.name === selectedPlanName);
+            setSelectedPlan(selectedPlan); // Update the selected plan object
         } else {
             setSelectedPlan(null); // Deselect the plan if unchecked
         }
     };
+    
    
     // console.log(process.env.REACT_APP_ENVIRONMENT);
 
     const handleSubmitTransaction = async () => {
-        setLoading('YES')
-        // console.log(selectedPlan);
+        setLoading('YES');
         try {
             // Get the environment from environment variables
             const environment = process.env.REACT_APP_ENVIRONMENT;
     
             // Choose the appropriate stripe_price_id based on the environment
             let stripePriceId;
-            if (environment === 'development') {
-                stripePriceId = selectedPlan.test_stripe_price_id;
-            } else if (environment === 'production') {
-                stripePriceId = selectedPlan.live_stripe_price_id;
+            if (selectedPlan) {
+                if (environment === 'development') {
+                    stripePriceId = selectedPlan.test_stripe_price_id;
+                } else if (environment === 'production') {
+                    stripePriceId = selectedPlan.live_stripe_price_id;
+                } else {
+                    throw new Error('Unknown environment');
+                }
             } else {
-                throw new Error('Unknown environment');
+                throw new Error('No plan selected');
             }
     
             // Submit the transaction with the selected stripe_price_id
@@ -176,10 +214,10 @@ const Dashboard = () => {
             if (!response.ok) {
                 throw new Error('Failed to submit transaction');
             }
-
+    
             // Parse the response
             const responseData = await response.json();
-
+    
             // Log the clientSecret if the transaction is successful
             console.log('Transaction submitted successfully');
             setLoading('NO');
@@ -195,6 +233,8 @@ const Dashboard = () => {
             // Handle error
         }
     };
+    
+    
 
     const appearance = {
         theme: 'stripe',
@@ -235,12 +275,16 @@ const Dashboard = () => {
 
                 <div className=" flex w-full space-x-6 mt-6 md:mt-8 lg:mt-0 md:space-x-12 lg:ml-auto">
                     <span className="">
-                        <p className=" text-[#0000004D] font-medium font-Afacad text-base">Numbers of Transcriptions</p>
-                        <p className=" font-Afacad font-medium text-2xl lg:text-5xl text-[#0000004D] mt-2">10</p>
+                        <p className=" text-[#0000004D] font-medium font-Afacad text-sm">Numbers of Transactions</p>
+                        <p className=" font-Afacad font-medium text-xl lg:text-xl text-[#0000004D] mt-2">{ transactionCount }</p>
                     </span>
                     <span className="">
-                        <p className=" text-[#0000004D] font-medium font-Afacad text-base">Numbers of Devices</p>
-                        <p className=" font-Afacad font-medium text-2xl lg:text-5xl text-[#0000004D] mt-2">2</p>
+                        <p className=" text-[#0000004D] font-medium font-Afacad text-sm">Numbers of Devices</p>
+                        <p className=" font-Afacad font-medium text-xl lg:text-xl text-[#0000004D] mt-2">{ deviceCount }</p>
+                    </span>
+                    <span className="">
+                        <p className=" text-[#0000004D] font-medium font-Afacad text-sm">Transcriptions Left</p>
+                        <p className=" font-Afacad font-medium text-xl lg:text-xl text-[#0000004D] mt-2">{ transcriptLeft }</p>
                     </span>
                 </div>
                 
@@ -290,21 +334,28 @@ const Dashboard = () => {
                         </div>
                         
                         {plans.map((item, index) => (
-                            <div key={index} className=" p-4 border border-[#EAECF0] mb-3 rounded-lg flex flex-row justify-between">
-                                <span className="">
-                                    <p className=" font-Afacad text-xs text-[#344054] font-medium">{item.name}</p>
-                                    <p className=" font-Afacad font-normal text-xs text-[#667085]">${item.price} Per Month</p>
+                            <div
+                                key={index}
+                                className={`p-4 border mb-3 rounded-lg flex flex-row justify-between ${
+                                plan === item.name ? 'border-[#78C257]' : 'border-[#EAECF0]'
+                                }`}
+                            >
+                                <span>
+                                <p className="font-Afacad text-xs text-[#344054] font-medium">{item.name}</p>
+                                <p className="font-Afacad font-normal text-xs text-[#667085]">${item.price} Per Month</p>
                                 </span>
                                 <div className="round">
                                     <input
                                         type="checkbox"
                                         id={item.name}
-                                        onChange={(event) => handlePlanSelection(event, item)}
+                                        onChange={(event) => handlePlanSelection(event, item.name)}
+                                        checked={plan === item.name}
                                     />
                                     <label htmlFor={item.name}></label>
                                 </div>
                             </div>
                         ))}
+
 
 
                         <button onClick={handleSubmitTransaction} className=" mt-[20px] flex ml-auto px-5 py-3 flex-row items-center justify-center bg-[#78C257] rounded-[50px]">

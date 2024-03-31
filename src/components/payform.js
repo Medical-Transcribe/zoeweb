@@ -7,28 +7,31 @@ const Payform = ({ clientSecret }) => {
     const elements = useElements();
     const [message, setMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [paymentAttempted, setPaymentAttempted] = useState(false); // state to track payment attempt
 
+
+
+    // useEffect hook to retrieve payment intent status
     useEffect(() => {
-        if (!stripe) {
+        // Check if stripe and clientSecret are available
+        if (!stripe || !clientSecret) {
             return;
         }
 
-        if (!clientSecret) {
-            return;
-        }
-
+        // Retrieve payment intent status
         stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
+            // Check payment status and update message accordingly
             if (paymentIntent.status === "succeeded") {
                 setMessage("Payment succeeded!");
             } else if (paymentIntent.status === "processing") {
                 setMessage("Your payment is processing.");
             } else if (paymentIntent.status === "requires_payment_method") {
-                setMessage("Your payment was not successful, please try again.");
+                setMessage(paymentAttempted ? "Your payment was not successful, please try again." : null);
             } else {
                 setMessage("Something went wrong.");
             }
         });
-    }, [stripe]);
+    }, [stripe, clientSecret, paymentAttempted]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -51,9 +54,7 @@ const Payform = ({ clientSecret }) => {
 
         // This point will only be reached if there is an immediate error when
         // confirming the payment. Otherwise, your customer will be redirected to
-        // your `return_url`. For some payment methods like iDEAL, your customer will
-        // be redirected to an intermediate site first to authorize the payment, then
-        // redirected to the `return_url`.
+        // your `return_url`.
         if (error && (error.type === "card_error" || error.type === "validation_error")) {
             setMessage(error.message);
         } else {
@@ -61,6 +62,7 @@ const Payform = ({ clientSecret }) => {
         }
 
         setIsLoading(false);
+        setPaymentAttempted(true);
     };
 
     const paymentElementOptions = {
@@ -68,7 +70,7 @@ const Payform = ({ clientSecret }) => {
     };
 
     return (
-        <form id="payment-form" onSubmit={handleSubmit}>
+        <form id="payment-form" className=" mt-6" onSubmit={handleSubmit}>
             <PaymentElement className=" font-Afacad" id="payment-element" options={paymentElementOptions} />
             <button className=" w-full h-[45px] rounded-[36px] flex items-center justify-center bg-[#78C257] mt-3 font-Afacad text-center text-white text-base font-medium" disabled={isLoading || !stripe || !elements} id="submit">
                 <span id="button-text">

@@ -85,12 +85,10 @@ const AuthProvider = (props) => {
 
 
     // Function to fetch user profile using access token from cookie
-    const fetchUserProfile = async () => {
+    const fetchUserProfile = async (accessToken) => {
         try {
-            const accessToken = getCookie('accessToken');
             if (!accessToken) {
-                // throw new Error('Access token not found in cookie');
-                console.log('Access token not found in cookie')
+                throw new Error('Access token not found in cookie');
             }
 
             const response = await fetch('https://dev-api.zoemed.ai/api/v1/profile', {
@@ -103,14 +101,13 @@ const AuthProvider = (props) => {
             const data = await response.json();
 
             if (response.ok) {
-                // Set user profile data
-                setUser(data);
-                // console.log(data)
+                return data; // Return user profile data
             } else {
-                console.error('Failed to fetch user profile:', data);
+                throw new Error('Failed to fetch user profile:', data);
             }
         } catch (error) {
             console.error('Error fetching user profile:', error);
+            throw error; // Rethrow the error for handling in calling function
         }
     };
 
