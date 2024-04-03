@@ -11,6 +11,7 @@ import Payform from "../components/payform";
 import load from './assets/load.gif';
 import close from './assets/close.svg';
 
+
 const Dashboard = () => {
 
 
@@ -30,35 +31,19 @@ const Dashboard = () => {
     const[ deviceCount, setDeviceCount] =useState('');
     const[ transactionCount, setTransactionCount] =useState('');
     const[ transcriptLeft, setTranscriptLeft] =useState(null);
-    // const [user, setUser] = useState(null);
-
-
-    // const plans = [
-    //     {name:'Free', price:'$0 Per Month'},
-    //     {name:'Pro', price:'$395 Per Month'},
-    //     {name:'Enterprise', price:'Custom pricing'}
-    // ]
-
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         await fetchUserProfile();
-    //         setName(user.data.name); // Set the name after fetching user profile
-    //         setPlan(user.data.plan); // You can set other data if needed
-    //     };
-
-    //     if (!accessToken) {
-    //         // Access token not found, redirect to login page
-    //         Navigate('/signin');
-    //     } else {
-    //         // Access token found, fetch user profile
-    //         fetchData();
-    //     }
-    // }, []);
+    const [email, setEmail] = useState('');
+    const [formData, setFormData] = useState({
+        reason: '',
+        subject: email,
+        message: '',
+    });
+    const [responseMessage, setResponseMessage] = useState('');
+    const [loading1, setLoading1] = useState(false);
 
 
     useEffect(() => {
         const accessToken = getCookie('accessToken');
+        console.log(accessToken)
         if (!accessToken) {
             Navigate('/signin'); // Access token not found, redirect to login page
         } else {
@@ -68,10 +53,18 @@ const Dashboard = () => {
                     const userData = await fetchUserProfile(accessToken);
                     setName(userData.data.name); // Set user profile data in state
                     setPlan(userData.data.plan);
+                    setEmail(userData.data.email);
                     setDeviceCount(userData.statistics.devices_count);
                     setTransactionCount(userData.statistics.transactions_count);
                     setTranscriptLeft(userData.statistics.transcription_remaining);
                     // console.log(userData)
+
+                    // Set the initial state of formData after fetching the user's email
+                    setFormData({
+                        reason: '',
+                        subject: userData.data.email, // Use the email value directly here
+                        message: '',
+                    });
                 } catch (error) {
                     // Handle error
                     console.error('Error fetching user profile:', error);
@@ -82,7 +75,6 @@ const Dashboard = () => {
         }
     }, [Navigate]);
   
-
 
     //Plans
     useEffect(() => {
@@ -123,10 +115,8 @@ const Dashboard = () => {
 
     useEffect(() => {
         makePayment();
-    }, [])
+    }, []);
     
-
-    // console.log(planIds)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -160,9 +150,44 @@ const Dashboard = () => {
     }, []);
     
 
-    // console.log(plans)
-    // console.log(accessToken)
+    //Support form functions 
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
+    const handleSubmit = async () => {
+        // Check if any of the fields are empty
+        if (!formData.reason || !formData.message) {
+            setResponseMessage('Please fill in all fields');
+            return;
+        }
+
+        setLoading1(true);
+
+        try {
+            const response = await fetch('https://dev-api.zoemed.ai/api/v1/support-email', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to submit support email');
+            }
+
+            const responseData = await response.json();
+            setResponseMessage(responseData.message);
+        } catch (error) {
+            console.error('Error submitting support email:', error);
+            setResponseMessage('Failed to submit support email');
+        }
+
+        setLoading1(false);
+    };
 
     
     const handlePlanSelection = (event, selectedPlanName) => {
@@ -365,19 +390,28 @@ const Dashboard = () => {
                     </div>
 
                     <div className=" w-full lg:w-[32%] p-6 rounded-[20px] bg-white">
-                        <p className=" font-Afacad text-xl mb-[34px] font-semibold">Authorized Devices</p> 
+                        <p className=" font-Afacad text-xl mb-[34px] font-semibold">Support</p> 
                         <label htmlFor="" className=" w-full font-Afacad font-medium text-sm text-[#272D37]">
                             Reason For Contact
-                            <select className=" w-full h-[46px] font-Afacad mt-2 border border-[#DAE0E6] p-2.5 rounded-md">
+                            <select name="reason"value={formData.reason} onChange={handleChange} className=" w-full h-[46px] font-Afacad mt-2 border border-[#DAE0E6] p-2.5 rounded-md">
                                 <option value="">Select...</option>
+                                <option value="Techincal Support">Techincal Support</option>
+                                <option value="Collaboration">Collaboration</option>
                             </select>
                         </label>
                         <div className=" mt-6">
                             <label htmlFor="" className=" w-full font-Afacad font-medium text-sm">
                                 Message
-                                <textarea name="" placeholder="Hi! We are an AI transcription company..." className="w-full font-Afacad mt-2 border border-[#DAE0E6] p-2.5 rounded-md" id="" cols="30" rows="3"></textarea>
+                                <textarea name="message" value={formData.message} onChange={handleChange} placeholder="Hi! We are an AI transcription company..." className="w-full font-Afacad mt-2 border border-[#DAE0E6] p-2.5 rounded-md" id="" cols="30" rows="3"></textarea>
                             </label>
-                            <button className=' w-full mt-6 px-6 py-3 bg-[#78C257] text-white text-center font-Afacad font-medium text-lg rounded-[50px]'>Submit</button>
+                            {responseMessage && <p className=" mt-2 font-medium font-Afacad text-sm text-[#626262]">{responseMessage}</p>}
+                            <button
+                                className="w-full bg-[#78C257] rounded-[36px] flex items-center justify-center h-[48px] mt-[60px] text-black text-center font-Afacad text-base"
+                                onClick={handleSubmit}
+                                disabled={loading1}
+                            >
+                                {loading1 ? <img src={load} className="w-6" alt="" /> : 'Send'}
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -13,6 +13,8 @@ const FgPass = () => {
     });
 
     const [loading, setLoading] = useState('NO');
+    const [resendLoading, setResendLoading] = useState(false);
+    const [resendMessage, setResendMessage] = useState('');
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -52,18 +54,66 @@ const FgPass = () => {
                     throw new Error('Failed to submit email');
                 }
 
+                const responseData = await response.json();
+                setResendMessage(responseData.data.message);
+
+                if (responseData.data.success) {
+                    console.log('Email resent successfully');
+                } else {
+                    setResendMessage('Failed to resend email');
+                }
+
                 // Handle success, maybe show a success message or update state
                 console.log('Email submitted successfully');
                 setLoading('NO');
             } catch (error) {
                 setLoading('NO');
-                console.error('Error submitting email:', error);
+                setResendMessage('Failed to submit email');
                 // Handle error, maybe show an error message to the user
             }
         } else {
             setLoading('NO');
         }
     };
+
+    const handleResend = async () => {
+        setResendLoading(true);
+
+        try {
+            const response = await fetch('https://dev-api.zoemed.ai/api/v1/auth/email-resend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: formData.email,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to resend email');
+            }
+
+            const responseData = await response.json();
+
+            setResendMessage(responseData.data.message); // Display the message from the response
+
+            if (responseData.data.success) {
+                console.log('Email resent successfully');
+            } else {
+                setResendMessage('Failed to resend email');
+            }
+        } catch (error) {
+            console.error('Error resending email:', error);
+        }
+
+        // Enable the resend button after 30 seconds
+        setTimeout(() => {
+            setResendLoading(false);
+            setResendMessage(''); // Clear the message after 30 seconds
+        }, 30000);
+    };
+
 
 
     return ( 
@@ -81,12 +131,31 @@ const FgPass = () => {
                         Email Address
                         <input type="email" name="email" value={formData.email} onChange={handleChange} className=" w-full h-[46px] font-Afacad mt-2 border border-[#DAE0E6] p-2.5 rounded-[15px]" placeholder="" />
                         {errors.email && <p className="text-red-500 font-Afacad font-normal text-sm">{errors.email}</p>}
+                        
+                        <div className=' w-full flex justify-between items-center'>
+                            <div>
+                                {resendMessage && <p className="text-[#717171] mt-2 font-Afacad font-normal text-sm">{resendMessage}</p>}
+                            </div>
+                        
+                            <button
+                                className="text-[#78C257] mt-2 ml-auto text-base font-medium font-Afacad"
+                                onClick={handleResend}
+                                disabled={resendLoading} // Disable the button when resending
+                            >
+                                Resend
+                            </button>
+                        </div>
+
                     </label>
 
-                    <button className=' w-full bg-[#78C257] rounded-[36px] flex items-center justify-center  h-[48px] mt-[60px] text-black text-center font-Afacad text-base'>
-                        { loading === 'NO' && 'Continue'}
-                        { loading === 'YES' && <img src={ load } className=' w-6' alt="" />} 
+                    <button
+                        className="w-full bg-[#78C257] rounded-[36px] flex items-center justify-center h-[48px] mt-[60px] text-black text-center font-Afacad text-base"
+                        onClick={handleSubmit}
+                        disabled={loading === 'YES'} // Disable the button when loading
+                    >
+                        {loading === 'NO' ? 'Continue' : <img src={load} className="w-6" alt="" />}
                     </button>
+
                 </div>
             </div>
 

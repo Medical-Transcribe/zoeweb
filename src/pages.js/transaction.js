@@ -13,7 +13,8 @@ import CardForm from "../components/cardForm";
 
 const Transaction = () => {
 
-
+    const { getCookie } = useContext(AuthContext);
+    const [cards, setCards] = useState(null);
     const data = [
         { time: '2024-02-21 12:39', type: 'Subscription', amount: '$5', status: 'Completed' },
         { time: '2024-02-21 12:39', type: 'Subscription', amount: '$5', status: 'Completed' },
@@ -22,10 +23,44 @@ const Transaction = () => {
         // Add more data as needed
     ];
 
-    const cards = [
-        {img:visa, digit:'**** **** **** 1234 5989', date:'04/24', tag:'Primary Card'},
-        {img:visa, digit:'**** **** **** 1234 5989', date:'04/24', tag:'Secondary Card'},
-    ];
+    useEffect(() => {
+        const fetchPaymentMethods = async () => {
+            try {
+                const accessToken = getCookie('accessToken'); // Assuming you have a function to get the access token
+                const url = "https://dev-api.zoemed.ai/api/v1/set-payment-methods";
+                const headers = {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                };
+    
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers,
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Failed to fetch payment methods');
+                }
+    
+                const responseData = await response.json();
+
+    
+                if (responseData.length === 0) {
+                    setCards('There are no cards now, click the button below to add one');
+                } else {
+                    setCards(responseData); // Update the state with the received cards
+                }
+                console.log(responseData);
+            } catch (error) {
+                console.error('Error fetching payment methods:', error);
+                // Handle error if needed
+            }
+        };
+    
+        fetchPaymentMethods();
+    }, []);
+    
 
     const [collectCard, setCollectCard] = useState(false);
     const [stripepromise, setStripePromise] = useState(null);
@@ -87,21 +122,35 @@ const Transaction = () => {
                     <div className=" py-3 px-6 bg-[#fff] rounded-[20px] w-full lg:w-[34%]">
                         <p className=" text-xl font-semibold font-Afacad">Card</p>
                         <div className=" w-full mt-[34px]">
-                            {cards.map((item, index) => (
-                                <div className=" w-full mb-2" key={index}>
-                                    <p className=" font-Afacad font-medium text-sm text-[#272D37]">{item.tag}</p>
-                                    <div className=" w-full border mt-2 border-[#DAE0E6] rounded-[6px] p-3">
-                                        <span className=" w-full flex flex-row justify-between items-center">
-                                            <img src={visa} alt="" />
-                                            <img src={bin} alt="" />
-                                        </span>
-                                        <span className=" w-full flex mt-4 flex-row justify-between items-center">
-                                            <p className="font-Afacad font-normal text-sm">{item.digit}</p>
-                                            <p className="font-Afacad font-normal text-sm">{item.date}</p>
-                                        </span>
-                                    </div>
+                            {cards === null ? (
+                                // If cards state is null, render a loading indicator or other UI
+                                <p className="font-Afacad text-sm text-[#344054] font-medium">Loading...</p>
+                            ) : typeof cards === 'string' ? (
+                                // If cards state is a string, render the message
+                                <p className="font-Afacad text-sm text-[#344054] font-medium">{cards}</p>
+                            ) : Array.isArray(cards) ? (
+                                // If cards state is an array, map through the cards
+                                <div>
+                                    {cards.map((item, index) => (
+                                        <div className="w-full mb-2" key={index}>
+                                            <p className="font-Afacad font-medium text-sm text-[#272D37]">{item.tag}</p>
+                                            <div className="w-full border mt-2 border-[#DAE0E6] rounded-[6px] p-3">
+                                                <span className="w-full flex flex-row justify-between items-center">
+                                                    <img src={item.icon} alt="" />
+                                                    <img src={bin} alt="" />
+                                                </span>
+                                                <span className="w-full flex mt-4 flex-row justify-between items-center">
+                                                    <p className="font-Afacad font-normal text-sm">{item.digit}</p>
+                                                    <p className="font-Afacad font-normal text-sm">{item.date}</p>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
+                            ) : (
+                                // If cards state is not null, string, or array, render an error message
+                                <p>Error: Invalid cards state</p>
+                            )}
                         </div>
 
                         <button onClick={()=>{setCollectCard(true)}} className=" mt-[12px] flex px-5 py-3 flex-row items-center justify-center space-x-3 bg-[#78C257] rounded-[50px]">
