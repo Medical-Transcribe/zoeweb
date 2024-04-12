@@ -13,6 +13,8 @@ import UpdatePassword from "./pages.js/updatePassword";
 import FgPass from "./pages.js/fgpass";
 import EnterCode from "./pages.js/entercode";
 import Newpass from "./pages.js/newpass";
+import Verified from "./pages.js/verfified";
+import NotVerified from "./pages.js/notverified";
 
 function App() {
 
@@ -38,6 +40,8 @@ function App() {
       <Route path="/updatePass" element={<UpdatePassword/>}/>
       <Route path="/enterpasscode" element={<EnterCode/>}/>
       <Route path="/createnewpassword" element={<Newpass/>}/>
+      <Route path="/CheckVerification/success" element={<Verified/>}/>
+      <Route path="/CheckVerification/failed" element={<NotVerified/>}/>
     </Routes>
     </>
   );
