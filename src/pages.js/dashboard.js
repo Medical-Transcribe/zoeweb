@@ -39,11 +39,11 @@ const Dashboard = () => {
     });
     const [responseMessage, setResponseMessage] = useState('');
     const [loading1, setLoading1] = useState(false);
-
+    const [loadingDeviceId, setLoadingDeviceId] = useState(null);
+    const [deleteMessage, setDeleteMessage] = useState("");
 
     useEffect(() => {
         const accessToken = getCookie('accessToken');
-        console.log(accessToken)
         if (!accessToken) {
             Navigate('/signin'); // Access token not found, redirect to login page
         } else {
@@ -76,7 +76,7 @@ const Dashboard = () => {
     }, [Navigate]);
   
 
-    //Plans
+    //fetch Plans
     useEffect(() => {
       const fetchPlans = async () => {
           try {
@@ -102,6 +102,8 @@ const Dashboard = () => {
     }, []); // Empty dependency array to ensure the effect runs only once
 
 
+    
+    //stripe form handler
     const makePayment = async () => {
         try {
             const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
@@ -118,6 +120,7 @@ const Dashboard = () => {
     }, []);
     
 
+    //Fetch Devices
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -189,7 +192,7 @@ const Dashboard = () => {
         setLoading1(false);
     };
 
-    
+    //function for plan selection
     const handlePlanSelection = (event, selectedPlanName) => {
         const selected = event.target.checked;
         setPlan(selected ? selectedPlanName : ''); // Update the selected plan
@@ -246,7 +249,7 @@ const Dashboard = () => {
             // Log the clientSecret if the transaction is successful
             console.log('Transaction submitted successfully');
             setLoading('NO');
-            console.log('Client Secret:', responseData.clientSecret);
+            // console.log('Client Secret:', responseData.clientSecret);
             setClientSecret(responseData.clientSecret);
             setPayment(true);
     
@@ -259,6 +262,48 @@ const Dashboard = () => {
         }
     };
     
+    // Event handler for deleting a device
+    const handleDeleteDevice = async (deviceId) => {
+        try {
+            // Set the loading state for the current device
+            setLoadingDeviceId(deviceId);
+    
+            // Construct the URL for deleting the device
+            const url = `https://dev-api.zoemed.ai/api/v1/devices/${deviceId}`;
+    
+            // Construct the request headers
+            const headers = {
+                "Authorization": `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            };
+    
+            // Send a DELETE request to delete the device
+            const response = await fetch(url, {
+                method: "DELETE",
+                headers,
+            });
+    
+            // If the deletion is successful, update the UI and show success message
+            if (response.ok) {
+                // Remove the deleted device from the devices state
+                setDevices(devices.filter(device => device.id !== deviceId));
+                // Set the success message
+                setDeleteMessage("Device deleted successfully.");
+            } else {
+                // If deletion fails, display error message from server
+                const errorMessage = await response.json();
+                setDeleteMessage(errorMessage.message || "Failed to delete device.");
+            }
+        } catch (error) {
+            console.error('Error deleting device:', error);
+            // Set error message if there's an error during deletion process
+            setDeleteMessage("Error deleting device.");
+        } finally {
+            // Reset the loading state for the current device
+            setLoadingDeviceId(null);
+        }
+    };
     
 
     const appearance = {
@@ -322,34 +367,39 @@ const Dashboard = () => {
                 <div className=" mt-6 flex flex-col lg:flex-row justify-between w-full -z-10 space-y-8 lg:space-y-0 ">
                     <div className=" w-full lg:w-[32%] p-6 rounded-[20px] bg-white relative">
                         <p className=" font-Afacad text-xl mb-3 font-semibold">Authorized Devices</p> 
+                        <div className=" h-[250px] overflow-y-auto lg:h-[210px]">
+                            {devices === null ? (
+                                // If devices state is null, render a loading indicator or other UI
+                                <p className=" font-Afacad text-sm text-[#344054] font-medium">Loading...</p>
+                            ) : typeof devices === 'string' ? (
+                                // If devices state is a string, render the message
+                                <p className=" font-Afacad text-sm text-[#344054] font-medium">{devices}</p>
+                            ) : Array.isArray(devices) ? (
+                                // If devices state is an array, map through the devices
+                                <div>
+                                    {devices.map((device, index) => (
+                                        <div key={index} className="w-full h-[45px] rounded-[5px] border border-[#EAEBF080] mb-3 flex flex-row justify-between items-center p-[18px]">
+                                            <p className="text-base font-Afacad text-[#000000B2] font-normal">{device.name}</p>
+                                            {loadingDeviceId === device.id ? (
+                                                // Display loading icon while the deletion is in progress
+                                                <img src={load} alt="Loading" />
+                                            ) : (
+                                                // Display bin icon with onClick event handler to delete the device
+                                                <img src={bin} alt="Delete" onClick={() => handleDeleteDevice(device.id)} />
+                                            )}
+                                        </div>
 
-                        {devices === null ? (
-                            // If devices state is null, render a loading indicator or other UI
-                            <p className=" font-Afacad text-sm text-[#344054] font-medium">Loading...</p>
-                        ) : typeof devices === 'string' ? (
-                            // If devices state is a string, render the message
-                            <p className=" font-Afacad text-sm text-[#344054] font-medium">{devices}</p>
-                        ) : Array.isArray(devices) ? (
-                            // If devices state is an array, map through the devices
-                            <div>
-                                {devices.map((device, index) => (
-                                    <div key={index} className="w-full h-[45px] rounded-[5px] border border-[#EAEBF080] mb-3 flex flex-row justify-between items-center p-[18px]">
-                                        <p className="text-base font-Afacad text-[#000000B2] font-normal">{device.device}</p>
-                                        <img src={bin} alt="" />
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            // If devices state is not null, string, or array, render an error message
-                            <p>Error: Invalid devices state</p>
-                        )}
-
-                        <button className=" absolute bottom-6 right-6 flex ml-auto px-5 py-3 flex-row items-center justify-center space-x-3 bg-[#78C257] rounded-[50px]">
-                            <img src={ plus } alt="" />
-                            <p className=" font-Afacad font-medium text-lg text-white">Authorize New Device</p>
-                        </button>
+                                    ))}
+                                </div>
+                            ) : (
+                                // If devices state is not null, string, or array, render an error message
+                                <p>Error: Invalid devices state</p>
+                            )}
+                        </div>
+                        {/* Display message for device deletion */}
+                        <p className=" mb-6 font-Afacad text-sm font-medium text-[#4d4d4d] flex w-full ml-auto">{deleteMessage}</p>
                     </div>
-                    <div className=" w-full lg:w-[32%] p-6 rounded-[20px] bg-white">
+                    <div className=" w-full relative lg:w-[32%] p-6 rounded-[20px] bg-white">
                         <div className=" flex flex-row items-center justify-between mb-6">
                             <p className=" font-Afacad text-xl mb-3 font-semibold">Subscription</p> 
                             <button className=' flex flex-row bg-[#78C257] px-3 h-[36px] space-x-2 rounded-[50px] items-center'>
@@ -383,7 +433,7 @@ const Dashboard = () => {
 
 
 
-                        <button onClick={handleSubmitTransaction} className=" mt-[20px] flex ml-auto px-5 py-3 flex-row items-center justify-center bg-[#78C257] rounded-[50px]">
+                        <button onClick={handleSubmitTransaction} className=" absolute bottom-6 right-6 mt-[20px] flex ml-auto px-5 py-3 flex-row items-center justify-center bg-[#78C257] rounded-[50px]">
                            { loading === 'NO' && <p className=" font-Afacad font-medium text-lg text-white">Change Plan</p>}
                            {  loading === 'YES' && <img src={ load } className=" w-6"/> }
                         </button>
