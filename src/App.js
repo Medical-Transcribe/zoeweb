@@ -40,8 +40,8 @@ function App() {
       <Route path="/updatePass" element={<UpdatePassword/>}/>
       <Route path="/enterpasscode" element={<EnterCode/>}/>
       <Route path="/createnewpassword" element={<Newpass/>}/>
-      <Route path="/CheckVerification/success" element={<Verified/>}/>
-      <Route path="/CheckVerification/failed" element={<NotVerified/>}/>
+      <Route path="/verification" element={<Verified/>}/>
+
     </Routes>
     </>
   );
