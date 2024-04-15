@@ -9,37 +9,61 @@ import { Link } from 'react-router-dom';
 
 const Header = () => {
 
-    const { fetchUserProfile, user, getCookie, logoutUser } = useContext(AuthContext);
+    const { fetchUserProfile, getCookie, logoutUser } = useContext(AuthContext);
     const accessToken = getCookie('accessToken');
     const [plan, setPlan] = useState('');
     const [verified, setVerified] = useState(false);
     const [unverified, setUnverified] = useState(false);
-
+    const [verificationStatus, setVerificationStatus] = useState('');
 
     useEffect(() => {
-        const fetchData = async () => {
-            await fetchUserProfile();
-            setPlan(user.data.plan);
-        };
+
+        const accessToken = getCookie('accessToken');
 
         if (!accessToken) {
         } else {
-            // Access token found, fetch user profile
-            fetchData();
-        }
-    }, [fetchUserProfile, accessToken]);
+            // Fetch user profile data if access token is available
+            const fetchData = async () => {
+                try {
+                    const userData = await fetchUserProfile(accessToken);
 
-   
+                    if (userData.data.email_verified_at) {
+                        setVerificationStatus('Verified');
+                    } else {
+                        setVerificationStatus('Unverified');
+                    };
+                } catch (error) {
+                    // Handle error
+                    console.error('Error fetching user profile:', error);
+                }
+            };
+            fetchData(); // Fetch user profile data
+        }
+    }, [fetchUserProfile, accessToken]);   
 
     return ( 
         <>
         <div className=" px-4 md:px-20 py-5 flex justify-between items-center border-b border-[#EAEBF0]">
             <img src={ logo } className='' alt="" />
             <span className=' flex flex-row space-x-4'>
-                <button onClick={()=>{ setVerified(true)}} className=' flex flex-row bg-[#78C257] px-5 py-2 space-x-2 rounded-[50px] items-center'>
+
+                    {verificationStatus === 'Verified' && (
+                        <button onClick={()=>{ setVerified(true)}} className=' flex flex-row bg-[#78C257] px-5 py-2 space-x-2 rounded-[50px] items-center'>
+                            <img src={profileTick} alt="" />
+                            <p className=' font-medium font-Afacad text-lg text-white'>Verified</p>
+                        </button>
+                    )}
+                    {verificationStatus === 'Unverified' && (
+                        <button onClick={()=>{ setUnverified(true)}} className=' flex flex-row bg-[#78C257] px-5 py-2 space-x-2 rounded-[50px] items-center'>
+                            <p className=' font-medium font-Afacad text-lg text-white'>Unverified</p>
+                        </button>
+                    )}
+
+{/* 
+                <button  className=' flex flex-row bg-[#78C257] px-5 py-2 space-x-2 rounded-[50px] items-center'>
                     <img src={ profileTick } alt="" />
                     <p className=' font-medium font-Afacad text-lg text-white'>Verified</p>
-                </button>
+                </button> */}
 
                 <button onClick={ logoutUser } className=' flex flex-row bg-[#78C257] px-5 py-2 space-x-2 rounded-[50px] items-center'>
                     <p className=' font-medium font-Afacad text-lg text-white'>Logout</p>
