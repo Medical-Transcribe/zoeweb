@@ -15,7 +15,7 @@ const Settings = () => {
     const [email, setEmail] = useState('');
     const accessToken = getCookie('accessToken');
     const [verifyEmail, setVerifyEmail] = useState(false);
-
+    const [resendLoading, setResendLoading] = useState('NO');
 
     // console.log(accessToken)
 
@@ -30,7 +30,7 @@ const Settings = () => {
                     const userData = await fetchUserProfile(accessToken);
                     setName(userData.data.name); // Set user profile data in state
                     setEmail(userData.data.email);
-                    console.log(userData.data)
+                    // console.log(userData.data)
                 } catch (error) {
                     // Handle error
                     console.error('Error fetching user profile:', error);
@@ -81,6 +81,46 @@ const Settings = () => {
         }
     };
 
+    //send email verification
+    const handleResend = async () => {
+        setResendLoading('YES');
+
+        try {
+            const response = await fetch('https://dev-api.zoemed.ai/api/v1/auth/email-resend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to resend email');
+                setResendLoading("NO");
+            }
+
+            const responseData = await response.json();
+
+            if (responseData.data.success) {
+                console.log('Email resent successfully');
+                setVerifyEmail(true);
+                setResendLoading("NO");
+            } else {
+                
+            }
+        } catch (error) {
+            console.error('Error resending email:', error);
+            setResendLoading("NO");
+        }
+
+        // Enable the resend button after 30 seconds
+        setTimeout(() => {
+            setResendLoading("NO");
+        }, 30000);
+    };
+
 
 
 
@@ -88,9 +128,9 @@ const Settings = () => {
         <>
         <Header/>
         <div className=" w-full py-3 border-b border-[#EAEBF0] flex flex-row items-center justify-center">
-            <Link to='/dashboard'><button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#0000004D] ">Overview</button></Link>
-            <Link to='/transaction'><button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#0000004D]">Transactions</button></Link>
-            <Link to='/settings'><button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#78C257] bg-[#E1F4D9]">Settings</button></Link>
+            <Link to='/dashboard'><button className=" px-4 md:px-6 py-2 md:py-4 rounded-[50px] font-Afacad font-medium text-sm md:text-lg text-[#0000004D] ">Overview</button></Link>
+            <Link to='/transaction'><button className=" px-4 md:px-6 py-2 md:py-4 rounded-[50px] font-Afacad font-medium text-sm md:text-lg text-[#0000004D]">Transactions</button></Link>
+            <Link to='/settings'><button className=" px-4 md:px-6 py-2 md:py-4 rounded-[50px] font-Afacad font-medium text-sm md:text-lg text-[#78C257] bg-[#E1F4D9]">Settings</button></Link>
         </div>
         <div className=" w-full px-4 md:px-20 py-8">
             <div className=" w-full p-8 bg-[#ECF6E7] rounded-[20px]">
@@ -115,7 +155,10 @@ const Settings = () => {
                     <div className=" flex w-full flex-row justify-center items-center space-x-6">
                         <Link to='/updatePass' className=" flex justify-center items-center" ><button className=" mt-5 px-6 py-3 border border-[#667085] rounded-[20px] text-[#344054] font-Afacad text-sm font-medium">Update Password</button></Link>
 
-                        <button onClick={()=>{setVerifyEmail(true)}} className=" mt-5 px-6 py-3 border border-[#667085] rounded-[20px] text-[#344054] font-Afacad text-sm font-medium">Verify Email</button>
+                        <button onClick={handleResend} className=" mt-5 px-6 py-3 border border-[#667085] rounded-[20px] text-[#344054] font-Afacad text-sm flex justify-center items-center font-medium">
+                            { resendLoading === 'NO' && 'Verify Email'}
+                            { resendLoading === 'YES' && <img src={ load } className=" w-6" /> }
+                            </button>
                     </div>
                 </div>
 

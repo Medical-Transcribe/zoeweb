@@ -48,14 +48,14 @@ const Header = () => {
             <span className=' flex flex-row space-x-4'>
 
                     {verificationStatus === 'Verified' && (
-                        <button onClick={()=>{ setVerified(true)}} className=' flex flex-row bg-[#78C257] px-5 py-2 space-x-2 rounded-[50px] items-center'>
+                        <button onClick={()=>{ setVerified(true)}} className=' flex flex-row bg-[#78C257] px-3 md:px-5 py-2 space-x-2 rounded-[50px] items-center'>
                             <img src={profileTick} alt="" />
-                            <p className=' font-medium font-Afacad text-lg text-white'>Verified</p>
+                            <p className=' font-medium font-Afacad text-sm md:text-lg text-white'>Verified</p>
                         </button>
                     )}
                     {verificationStatus === 'Unverified' && (
-                        <button onClick={()=>{ setUnverified(true)}} className=' flex flex-row bg-[#78C257] px-5 py-2 space-x-2 rounded-[50px] items-center'>
-                            <p className=' font-medium font-Afacad text-lg text-white'>Unverified</p>
+                        <button onClick={()=>{ setUnverified(true)}} className=' flex flex-row bg-[#78C257] px-3 md:px-5 py-2 space-x-2 rounded-[50px] items-center'>
+                            <p className=' font-medium font-Afacad text-sm md:text-lg text-white'>Unverified</p>
                         </button>
                     )}
 
@@ -66,7 +66,7 @@ const Header = () => {
                 </button> */}
 
                 <button onClick={ logoutUser } className=' flex flex-row bg-[#78C257] px-5 py-2 space-x-2 rounded-[50px] items-center'>
-                    <p className=' font-medium font-Afacad text-lg text-white'>Logout</p>
+                    <p className=' font-medium font-Afacad text-sm md:text-lg text-white'>Logout</p>
                 </button>
             </span>
         </div>

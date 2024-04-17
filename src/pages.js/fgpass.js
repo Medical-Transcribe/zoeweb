@@ -76,45 +76,6 @@ const FgPass = () => {
         }
     };
 
-    const handleResend = async () => {
-        setResendLoading(true);
-
-        try {
-            const response = await fetch('https://dev-api.zoemed.ai/api/v1/auth/email-resend', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: formData.email,
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to resend email');
-            }
-
-            const responseData = await response.json();
-
-            setResendMessage(responseData.data.message); // Display the message from the response
-
-            if (responseData.data.success) {
-                console.log('Email resent successfully');
-            } else {
-                setResendMessage('Failed to resend email');
-            }
-        } catch (error) {
-            console.error('Error resending email:', error);
-        }
-
-        // Enable the resend button after 30 seconds
-        setTimeout(() => {
-            setResendLoading(false);
-            setResendMessage(''); // Clear the message after 30 seconds
-        }, 30000);
-    };
-
-
 
     return ( 
         <>
@@ -139,7 +100,7 @@ const FgPass = () => {
                         
                             <button
                                 className="text-[#78C257] mt-2 ml-auto text-base font-medium font-Afacad"
-                                onClick={handleResend}
+                                // onClick={handleResend}
                                 disabled={resendLoading} // Disable the button when resending
                             >
                                 Resend

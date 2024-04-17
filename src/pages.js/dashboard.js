@@ -40,7 +40,11 @@ const Dashboard = () => {
     const [responseMessage, setResponseMessage] = useState('');
     const [loading1, setLoading1] = useState(false);
     const [loadingDeviceId, setLoadingDeviceId] = useState(null);
+
+    const [deleteWarning, setDeleteWarning] = useState(false);
     const [deleteMessage, setDeleteMessage] = useState("");
+    const [deleting, setDeleting] = useState(false);
+    const [deletingDeviceId, setDeletingDeviceId] = useState(null)
 
     useEffect(() => {
         const accessToken = getCookie('accessToken');
@@ -263,13 +267,21 @@ const Dashboard = () => {
     };
     
     // Event handler for deleting a device
+
     const handleDeleteDevice = async (deviceId) => {
+        // Open the delete warning modal
+        setDeleteWarning(true);
+        // Set the ID of the device to be deleted
+        setDeletingDeviceId(deviceId);
+    };
+
+
+    const confirmDelete = async () => {
+        // Update state to indicate deletion in progress
+        setDeleting(true);
         try {
-            // Set the loading state for the current device
-            setLoadingDeviceId(deviceId);
-    
             // Construct the URL for deleting the device
-            const url = `https://dev-api.zoemed.ai/api/v1/devices/${deviceId}`;
+            const url = `https://dev-api.zoemed.ai/api/v1/devices/${deletingDeviceId}`;
     
             // Construct the request headers
             const headers = {
@@ -287,7 +299,7 @@ const Dashboard = () => {
             // If the deletion is successful, update the UI and show success message
             if (response.ok) {
                 // Remove the deleted device from the devices state
-                setDevices(devices.filter(device => device.id !== deviceId));
+                setDevices(devices.filter(device => device.id !== deletingDeviceId));
                 // Set the success message
                 setDeleteMessage("Device deleted successfully.");
             } else {
@@ -300,10 +312,16 @@ const Dashboard = () => {
             // Set error message if there's an error during deletion process
             setDeleteMessage("Error deleting device.");
         } finally {
-            // Reset the loading state for the current device
-            setLoadingDeviceId(null);
+            // Reset the delete warning state and deletion state
+            setDeleting(false);
+            setDeleteWarning(false);
+            // Reset the delete message after 10 seconds
+            setTimeout(() => {
+                setDeleteMessage(null);
+            }, 10000);
         }
     };
+    
     
 
     const appearance = {
@@ -318,11 +336,47 @@ const Dashboard = () => {
 
     return ( 
         <>
+        {/* Delete Warning */}
+        {deleteWarning && (
+            <div className="fixed w-full h-[100vh] px-6 bg-[#00000071] z-[9999] flex justify-center items-center">
+                <div className="w-full md:w-[450px] p-6 rounded-[15px] overflow-auto z-[9999] bg-[#f8f8f8] relative">
+                    {deleting ? (
+                        // Display loading icon and message if deletion is in progress
+                        <div className=" w-full flex justify-center items-center">
+                            <p className="font-Afacad font-semibold text-center text-base">Deleting device...</p>
+                            <img src={load} alt="Loading" className=" w-6 mt-4" />
+                        </div>
+                    ) : (
+                        // Display confirmation message if deletion is not in progress
+                        <>
+                            <p className="font-Afacad font-semibold text-center text-base">
+                                Are you sure you want to delete this device?
+                            </p>
+                            <div className="flex justify-center mt-4">
+                                <button
+                                    onClick={() => setDeleteWarning(false)}
+                                    className="mr-4 px-4 py-2 rounded-[50px] bg-[#E1F4D9] font-Afacad text-center text-sm font-semibold"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={() => confirmDelete()}
+                                    className="px-4 py-2 rounded-[50px] bg-[#c13434] text-white font-Afacad text-center text-sm font-semibold"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
+        )}
+
 
         {/* payment Element */}
 
-        { payment && <div className=" fixed w-full h-[100vh] bg-[#00000071] z-[9999] flex justify-center items-center ">
-            <div className="w-[450px] p-6 rounded-[15px] overflow-auto z-[9999] bg-[#fff] relative">
+        { payment && <div className=" fixed w-full h-[100vh] px-6 bg-[#00000071] z-[9999] flex justify-center items-center ">
+            <div className=" w-full md:w-[450px] p-6 rounded-[15px] overflow-auto z-[9999] bg-[#fff] relative">
                 <img src={ close } onClick={()=>{setPayment(false)}} className=" absolute top-3 right-3" alt="" />
                 <Elements stripe={stripepromise} options={options} >
                     <Payform clientSecret={clientSecret}/>
@@ -332,9 +386,9 @@ const Dashboard = () => {
 
         <Header/>
         <div className=" w-full py-3 border-b border-[#EAEBF0] flex flex-row items-center justify-center">
-            <Link to='/dashboard'><button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#78C257] bg-[#E1F4D9]">Overview</button></Link>
-            <Link to='/transaction'><button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#0000004D]">Transactions</button></Link>
-            <Link to='/settings'><button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#0000004D]">Settings</button></Link>
+            <Link to='/dashboard'><button className=" px-4 md:px-6 py-2 md:py-4 rounded-[50px] font-Afacad font-medium text-sm md:text-lg text-[#78C257] bg-[#E1F4D9]">Overview</button></Link>
+            <Link to='/transaction'><button className=" px-4 md:px-6 py-2 md:py-4 rounded-[50px] font-Afacad font-medium text-sm md:text-lg text-[#0000004D]">Transactions</button></Link>
+            <Link to='/settings'><button className=" px-4 md:px-6 py-2 md:py-4 rounded-[50px] font-Afacad font-medium text-sm md:text-lg text-[#0000004D]">Settings</button></Link>
         </div>
 
         <div className=" w-full px-4 md:px-20 py-8 rounded-[20px]">
@@ -396,8 +450,7 @@ const Dashboard = () => {
                                 <p>Error: Invalid devices state</p>
                             )}
                         </div>
-                        {/* Display message for device deletion */}
-                        <p className=" mb-6 font-Afacad text-sm font-medium text-[#4d4d4d] flex w-full ml-auto">{deleteMessage}</p>
+                        { deleteMessage && <p className=" font-medium text-sm font-Afacad text-[#636363]">{deleteMessage}</p>}
                     </div>
                     <div className=" w-full relative lg:w-[32%] p-6 rounded-[20px] bg-white">
                         <div className=" flex flex-row items-center justify-between mb-6">
@@ -407,30 +460,30 @@ const Dashboard = () => {
                                 <p className=' font-medium font-Afacad text-lg text-white'>{plan}</p>
                             </button>
                         </div>
-                        
-                        {plans.map((item, index) => (
-                            <div
-                                key={index}
-                                className={`p-4 border mb-3 rounded-lg flex flex-row justify-between ${
-                                plan === item.name ? 'border-[#78C257]' : 'border-[#EAECF0]'
-                                }`}
-                            >
-                                <span>
-                                <p className="font-Afacad text-xs text-[#344054] font-medium">{item.name}</p>
-                                <p className="font-Afacad font-normal text-xs text-[#667085]">${item.price} Per Month</p>
-                                </span>
-                                <div className="round">
-                                    <input
-                                        type="checkbox"
-                                        id={item.name}
-                                        onChange={(event) => handlePlanSelection(event, item.name)}
-                                        checked={plan === item.name}
-                                    />
-                                    <label htmlFor={item.name}></label>
+                        <div className=" h-[300px] lg:h-auto">
+                            {plans.map((item, index) => (
+                                <div
+                                    key={index}
+                                    className={`p-4 border mb-3 rounded-lg flex flex-row justify-between ${
+                                    plan === item.name ? 'border-[#78C257]' : 'border-[#EAECF0]'
+                                    }`}
+                                >
+                                    <span>
+                                    <p className="font-Afacad text-xs text-[#344054] font-medium">{item.name}</p>
+                                    <p className="font-Afacad font-normal text-xs text-[#667085]">${item.price} Per Month</p>
+                                    </span>
+                                    <div className="round">
+                                        <input
+                                            type="checkbox"
+                                            id={item.name}
+                                            onChange={(event) => handlePlanSelection(event, item.name)}
+                                            checked={plan === item.name}
+                                        />
+                                        <label htmlFor={item.name}></label>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-
+                            ))}
+                        </div>
 
 
                         <button onClick={handleSubmitTransaction} className=" absolute bottom-6 right-6 mt-[20px] flex ml-auto px-5 py-3 flex-row items-center justify-center bg-[#78C257] rounded-[50px]">

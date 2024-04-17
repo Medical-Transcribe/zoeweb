@@ -85,9 +85,9 @@ const Transaction = () => {
 
         <Header/>
         <div className=" w-full py-3 border-b border-[#EAEBF0] flex flex-row items-center justify-center">
-            <Link to='/dashboard'><button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#0000004D] ">Overview</button></Link>
-            <Link to='/transaction'><button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#78C257] bg-[#E1F4D9]">Transactions</button></Link>
-            <Link to='/settings'><button className=" px-6 py-4 rounded-[50px] font-Afacad font-medium text-lg text-[#0000004D]">Settings</button></Link>
+            <Link to='/dashboard'><button className=" px-4 md:px-6 py-2 md:py-4 rounded-[50px] font-Afacad font-medium text-sm md:text-lg text-[#0000004D] ">Overview</button></Link>
+            <Link to='/transaction'><button className=" px-4 md:px-6 py-2 md:py-4 rounded-[50px] font-Afacad font-medium text-sm md:text-lg text-[#78C257] bg-[#E1F4D9]">Transactions</button></Link>
+            <Link to='/settings'><button className=" px-4 md:px-6 py-2 md:py-4 rounded-[50px] font-Afacad font-medium text-sm md:text-lg text-[#0000004D]">Settings</button></Link>
         </div>
 
         <div className="  w-full px-4 md:px-20 py-8">
