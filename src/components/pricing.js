@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import check from "./assets/check.svg";
 import { useState, useEffect } from "react";
 
@@ -106,9 +107,11 @@ const Pricing = () => {
                 </p>
               </span>
 
-              <button className=" mt-10 px-6 py-4 bg-[#78C257] text-white text-center font-Afacad font-semibold text-base rounded-[50px]">
-                Get Started
-              </button>
+              <Link to="/signup">
+                <button className=" mt-10 px-6 py-4 bg-[#78C257] text-white text-center font-Afacad font-semibold text-base rounded-[50px]">
+                  Get Started
+                </button>
+              </Link>
             </div>
           ))}
         </div>

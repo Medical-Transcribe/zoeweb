@@ -2,8 +2,8 @@ import logo from "./assets/whiteLogo.svg";
 import fb from "./assets/fb.svg";
 import google from "./assets/google.svg";
 import apple from "./assets/appl.svg";
-import appleblk from "./assets/blackappl.svg";
-import windows from "./assets/windows.svg";
+// import appleblk from "./assets/blackappl.svg";
+// import windows from "./assets/windows.svg";
 import ig from "./assets/ig.svg";
 import { Link } from "react-router-dom";
 

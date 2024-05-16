@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import logo from "./assets/logo.svg";
-import icon from "./assets/Icon.svg";
+// import icon from "./assets/Icon.svg";
 
 const Navbar = () => {
   function overlay() {
@@ -46,7 +46,7 @@ const Navbar = () => {
               How it Works
             </p>
           </Link>
-          <span className=" flex flex-row items-center space-x-6">
+          <span className=" flex md:hidden flex-row items-center space-x-6">
             <Link to="/signin">
               <p className=" font-Afacad text-[#78C257] font-semibold text-base">
                 Login

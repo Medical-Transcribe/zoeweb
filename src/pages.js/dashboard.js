@@ -609,7 +609,7 @@ const Dashboard = () => {
                   </p>
                 )}
                 <button
-                  className="w-full bg-[#78C257] rounded-[36px] flex items-center justify-center h-[48px] mt-[60px] text-black text-center font-Afacad text-base"
+                  className="w-full bg-[#78C257] rounded-[36px] flex items-center justify-center h-[48px] mt-[60px] text-white text-center font-Afacad text-base"
                   onClick={handleSubmit}
                   disabled={loading1}
                 >
