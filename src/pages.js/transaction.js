@@ -15,6 +15,7 @@ const Transaction = () => {
 
     const { getCookie } = useContext(AuthContext);
     const [cards, setCards] = useState(null);
+    const [transactions, setTransactions] = useState(null);
     const data = [
         { time: '2024-02-21 12:39', type: 'Subscription', amount: '$5', status: 'Completed' },
         { time: '2024-02-21 12:39', type: 'Subscription', amount: '$5', status: 'Completed' },
@@ -23,10 +24,11 @@ const Transaction = () => {
         // Add more data as needed
     ];
 
+    //fetch payment methods
     useEffect(() => {
         const fetchPaymentMethods = async () => {
             try {
-                const accessToken = getCookie('accessToken'); // Assuming you have a function to get the access token
+                const accessToken = getCookie('accessToken'); 
                 const url = "https://dev-api.zoemed.ai/api/v1/set-payment-methods";
                 const headers = {
                     "Authorization": `Bearer ${accessToken}`,
@@ -44,6 +46,7 @@ const Transaction = () => {
                 }
     
                 const responseData = await response.json();
+                console.log(responseData)
 
     
                 if (responseData.length === 0) {
@@ -59,6 +62,46 @@ const Transaction = () => {
         };
     
         fetchPaymentMethods();
+    }, []);
+
+
+    // fetch transactions
+    useEffect(() => {
+        const fetchTransactions = async () => {
+            try {
+                const accessToken = getCookie('accessToken'); 
+                const url = "https://dev-api.zoemed.ai/api/v1/transactions";
+                const headers = {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                };
+    
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers,
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Failed to fetch transactions');
+                }
+    
+                const responseData = await response.json();
+
+    
+                if (responseData.length === 0) {
+                    setTransactions('There are no transactions now');
+                } else {
+                    setTransactions(responseData); // Update the state with the received transaction
+                }
+                console.log(responseData);
+            } catch (error) {
+                console.error('Error fetching payment methods:', error);
+                // Handle error if needed
+            }
+        };
+    
+        fetchTransactions();
     }, []);
     
 
