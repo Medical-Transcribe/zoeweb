@@ -24,8 +24,12 @@ const UpdatePassword = () => {
 
                 <div className=" mt-5 w-full flex flex-col">
                     <label className=" w-full flex justify-between font-Afacad text-sm font-medium text-[#344054] items-center">
-                        Enter New password
+                        Enter Current password
                         <input type="text" className=" w-[60%] font-Afacad rounded-[8px] text-[#667085] font-normal text-base h-[45px] p-2.5" />
+                    </label>
+                    <label className=" w-full flex justify-between font-Afacad text-sm font-medium mt-10 text-[#344054] items-center">
+                        Enter New password
+                        <input type="text"  className=" w-[60%] font-Afacad rounded-[8px] text-[#667085] font-normal text-base h-[45px] p-2.5" />
                     </label>
                     <label className=" w-full flex justify-between font-Afacad text-sm font-medium mt-10 text-[#344054] items-center">
                         Confirm New password

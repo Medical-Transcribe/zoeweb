@@ -11,9 +11,14 @@ import Transaction from "./pages.js/transaction";
 import Settings from "./pages.js/settings";
 import UpdatePassword from "./pages.js/updatePassword";
 import FgPass from "./pages.js/fgpass";
+import EnterCode from "./pages.js/entercode";
+import Newpass from "./pages.js/newpass";
+import Verified from "./pages.js/verfified";
+import PaymentSuccess from "./pages.js/paymentSuccess";
+import PrivacyPolicy from "./pages.js/privacy";
+import HowToDownload from "./pages.js/howTo";
 
 function App() {
-
   const location = useLocation();
 
   useEffect(() => {
@@ -22,19 +27,25 @@ function App() {
 
   return (
     <>
-    <Routes>
-      <Route path="/" element={<Landing/>}/>
-      <Route path="/pricing" element={<Price/>}/>
-      <Route path="/faq" element={<Faqq/>}/>
-      <Route path="/contact" element={<Contact/>}/>
-      <Route path="/signin" element={<Login/>}/>
-      <Route path="/forgotPassword" element={<FgPass/>}/>
-      <Route path="/signup" element={<Signup/>}/>
-      <Route path="/dashboard" element={<Dashboard/>}/>
-      <Route path="/transaction" element={<Transaction/>}/>
-      <Route path="/settings" element={<Settings/>}/>
-      <Route path="/updatePass" element={<UpdatePassword/>}/>
-    </Routes>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/pricing" element={<Price />} />
+        <Route path="/faq" element={<Faqq />} />
+        <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+        <Route path="/how-to-download" element={<HowToDownload />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/signin" element={<Login />} />
+        <Route path="/forgotPassword" element={<FgPass />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/transaction" element={<Transaction />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/updatePass" element={<UpdatePassword />} />
+        <Route path="/enterpasscode" element={<EnterCode />} />
+        <Route path="/createnewpassword" element={<Newpass />} />
+        <Route path="/verification" element={<Verified />} />
+        <Route path="/paymentSucessful" element={<PaymentSuccess />} />
+      </Routes>
     </>
   );
 }
