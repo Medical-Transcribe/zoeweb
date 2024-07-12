@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 
 const Pricing = () => {
   const [plan, setPlan] = useState([]);
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     const fetchFAQs = async () => {
       try {
-        const response = await fetch("https://dev-api.zoemed.ai/api/v1/plans");
+        const response = await fetch(`${API_BASE_URL}api/v1/plans`);
+
         if (!response.ok) {
           throw new Error("Failed to fetch FAQs");
         }
@@ -28,7 +30,7 @@ const Pricing = () => {
     };
   }, []); // Empty dependency array to ensure the effect runs only once
 
-  console.log(plan);
+  // console.log(plan);
 
   const plans = [
     {

@@ -14,6 +14,7 @@ const Transaction = () => {
   const { getCookie } = useContext(AuthContext);
   const [cards, setCards] = useState(null);
   const [transactions, setTransactions] = useState([]);
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const formatDateString = (dateString) => {
     const date = new Date(dateString);
@@ -50,7 +51,7 @@ const Transaction = () => {
     const fetchPaymentMethods = async () => {
       try {
         const accessToken = getCookie("accessToken");
-        const url = "https://dev-api.zoemed.ai/api/v1/set-payment-methods";
+        const url = `${API_BASE_URL}api/v1/set-payment-methods`;
         const headers = {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
@@ -89,7 +90,7 @@ const Transaction = () => {
     const fetchTransactions = async () => {
       try {
         const accessToken = getCookie("accessToken");
-        const url = "https://dev-api.zoemed.ai/api/v1/transactions";
+        const url = `${API_BASE_URL}api/v1/transactions`;
         const headers = {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",

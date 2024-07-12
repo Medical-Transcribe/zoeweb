@@ -8,8 +8,9 @@ const PaymentSuccess = () => {
   const [verificationStatus, setVerificationStatus] = useState("loading");
   const { getCookie } = useContext(AuthContext);
   const accessToken = getCookie("accessToken");
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-  console.log(accessToken);
+  // console.log(accessToken);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -33,7 +34,7 @@ const PaymentSuccess = () => {
     paymentIntentClientSecret
   ) => {
     try {
-      const url = `https://dev-api.zoemed.ai/api/v1/transactions/${paymentIntentId}`;
+      const url = `${API_BASE_URL}api/v1/transactions/${paymentIntentId}`;
       const response = await fetch(url, {
         method: "PUT",
         headers: {
