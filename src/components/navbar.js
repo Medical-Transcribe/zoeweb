@@ -31,6 +31,11 @@ const Navbar = () => {
               Pricing
             </p>
           </Link>
+          <Link to="/how-to-download">
+            <p className=" font-normal  transition-all cursor-pointer text-base text-[#000] font-Afacad ">
+              How it Works
+            </p>
+          </Link>
           <Link to="/faq">
             <p className=" font-normal  transition-all cursor-pointer text-base text-[#000] font-Afacad ">
               FAQ
@@ -39,11 +44,6 @@ const Navbar = () => {
           <Link to="/contact">
             <p className=" font-normal  transition-all cursor-pointer text-base text-[#000] font-Afacad ">
               Contact Us
-            </p>
-          </Link>
-          <Link to="/how-to-download">
-            <p className=" font-normal  transition-all cursor-pointer text-base text-[#000] font-Afacad ">
-              How it Works
             </p>
           </Link>
           <span className=" flex md:hidden flex-row items-center space-x-6">
@@ -71,14 +71,14 @@ const Navbar = () => {
           <Link to="/pricing">
             <p className="">Pricing</p>
           </Link>
+          <Link to="/how-to-download">
+            <p className="">How it Works</p>
+          </Link>
           <Link to="/faq">
             <p className="">FAQ</p>
           </Link>
           <Link to="/contact">
             <p className="">Contact Us</p>
-          </Link>
-          <Link to="/how-to-download">
-            <p className="">How it Works</p>
           </Link>
         </span>
 

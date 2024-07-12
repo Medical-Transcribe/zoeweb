@@ -7,6 +7,7 @@ const AuthProvider = (props) => {
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState("");
   const Navigate = useNavigate();
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const expirationDate = new Date();
   expirationDate.setDate(expirationDate.getDate() + 7); // Set expiration to 7 days from now
@@ -25,16 +26,14 @@ const AuthProvider = (props) => {
 
   const registerUser = async (formData) => {
     try {
-      const response = await fetch(
-        "https://dev-api.zoemed.ai/api/v1/auth/register",
-        {
-          method: "POST",
-          body: JSON.stringify(formData),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}api/v1/auth/register`, {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
       const responseData = await response.json();
       if (response.ok) {
         // Save user data and access token
@@ -57,17 +56,14 @@ const AuthProvider = (props) => {
   //login user
   const loginUser = async (formData) => {
     try {
-      const response = await fetch(
-        "https://dev-api.zoemed.ai/api/v1/auth/login",
-        {
-          method: "POST",
-          body: JSON.stringify(formData),
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}api/v1/auth/login`, {
+        method: "POST",
+        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
       const responseData = await response.json();
 
       // Check if login was successful
@@ -96,7 +92,7 @@ const AuthProvider = (props) => {
         throw new Error("Access token not found in cookie");
       }
 
-      const response = await fetch("https://dev-api.zoemed.ai/api/v1/profile", {
+      const response = await fetch(`${API_BASE_URL}api/v1/profile`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
@@ -125,7 +121,8 @@ const AuthProvider = (props) => {
         return null; // Exit function and return null if access token is not found
       }
 
-      const url = new URL("https://dev-api.zoemed.ai/api/v1/devices");
+      const url = new URL(`${API_BASE_URL}api/v1/devices`);
+
       const headers = {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
@@ -156,7 +153,7 @@ const AuthProvider = (props) => {
   const logoutUser = () => {
     // Remove the access token from the cookies
     document.cookie =
-      "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; // Setting the expiration date in the past deletes the cookiES
+      "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; // deletes the cookiES
     setUser(null); // Reset the user state to null
     setMessage(""); // Clear any previous messages
     Navigate("/signin");

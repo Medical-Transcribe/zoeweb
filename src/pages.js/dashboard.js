@@ -42,6 +42,7 @@ const Dashboard = () => {
   const [deleteMessage, setDeleteMessage] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [deletingDeviceId, setDeletingDeviceId] = useState(null);
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     const accessToken = getCookie("accessToken");
@@ -80,7 +81,8 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await fetch("https://dev-api.zoemed.ai/api/v1/plans");
+        const response = await fetch(`${API_BASE_URL}api/v1/plans`);
+
         if (!response.ok) {
           throw new Error("Failed to fetch FAQs");
         }
@@ -170,18 +172,15 @@ const Dashboard = () => {
     setLoading1(true);
 
     try {
-      const response = await fetch(
-        "https://dev-api.zoemed.ai/api/v1/support-email",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}api/v1/support-email`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to submit support email");
@@ -235,19 +234,17 @@ const Dashboard = () => {
       //   console.log(stripePriceId);
 
       // Submit the transaction with the selected stripe_price_id
-      const response = await fetch(
-        "https://dev-api.zoemed.ai/api/v1/transactions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({
-            stripe_price_id: stripePriceId,
-          }),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}api/v1/transactions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          stripe_price_id: stripePriceId,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to submit transaction");
@@ -286,7 +283,7 @@ const Dashboard = () => {
     setDeleting(true);
     try {
       // Construct the URL for deleting the device
-      const url = `https://dev-api.zoemed.ai/api/v1/devices/${deletingDeviceId}`;
+      const url = `${API_BASE_URL}api/v1/devices/${deletingDeviceId}`;
 
       // Construct the request headers
       const headers = {
